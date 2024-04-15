@@ -18,10 +18,10 @@ final class AddTrackerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        prepare()
+        setup()
     }
     
-    private func prepare() {
+    private func setup() {
         view.backgroundColor = .white
         
         view.addSubview(headerLabel)
@@ -77,12 +77,11 @@ final class AddTrackerViewController: UIViewController {
     
 }
 
-// MARK: - Actions
+// MARK: - Helpers
 extension AddTrackerViewController {
     
-    @objc private func habitAction() {
-        let vc = HabitViewController()
-        vc.onCreateTrackerCallback = { [weak self] in
+    private func createTracker(_ trackerKind: TrackerKind) {
+        let vc = CreateTrackerViewController(trackerKind) { [weak self] in
             guard let self else {
                 return
             }
@@ -92,16 +91,17 @@ extension AddTrackerViewController {
         present(vc, animated: true)
     }
     
+}
+
+// MARK: - Actions
+extension AddTrackerViewController {
+    
+    @objc private func habitAction() {
+        createTracker(.habit)
+    }
+    
     @objc private func irregularEventAction() {
-        let vc = IrregularEventViewController()
-        vc.onCreateTrackerCallback = { [weak self] in
-            guard let self else {
-                return
-            }
-            onCreateTrackerCallback?($0)
-            dismiss(animated: true, completion: nil)
-        }
-        present(vc, animated: true)
+        createTracker(.irregular)
     }
     
 }

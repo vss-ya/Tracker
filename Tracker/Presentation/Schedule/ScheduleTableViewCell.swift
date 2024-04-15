@@ -11,14 +11,14 @@ final class ScheduleTableViewCell: UITableViewCell {
     
     static let reuseIdentifier = "ScheduleTableViewCell"
     
-    lazy var titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         return label
     }()
     
-    lazy var switchControl: UISwitch = {
+    private lazy var switchControl: UISwitch = {
         let switchControl = UISwitch()
         switchControl.translatesAutoresizingMaskIntoConstraints = false
         switchControl.onTintColor = UIColor.ypBlue
@@ -47,6 +47,14 @@ final class ScheduleTableViewCell: UITableViewCell {
             switchControl.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             switchControl.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
+    }
+    
+    func updateLabel(title: String) {
+        titleLabel.text = title
+    }
+    
+    func updateSwitchControl(isOn: Bool) {
+        switchControl.isOn = isOn
     }
     
     @objc private func onSwitchAction() {

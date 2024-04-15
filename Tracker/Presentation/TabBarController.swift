@@ -28,10 +28,6 @@ final class TabBarController: UITabBarController {
         
         viewControllers = [trackersVc, statisticVc]
         
-        let separatorImage = UIImage()
-
-        tabBar.shadowImage = separatorImage
-        tabBar.backgroundImage = separatorImage
         tabBar.layer.borderWidth = 0.50
         tabBar.clipsToBounds = true
     }

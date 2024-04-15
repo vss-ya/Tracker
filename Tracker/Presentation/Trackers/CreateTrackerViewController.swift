@@ -1,13 +1,13 @@
 //
-//  HabitViewController.swift
+//  CreateTrackerViewController.swift
 //  Tracker
 //
-//  Created by vs on 05.04.2024.
+//  Created by vs on 15.04.2024.
 //
 
 import UIKit
 
-final class HabitViewController: UIViewController {
+final class CreateTrackerViewController: UIViewController {
     
     private lazy var headerLabel: UILabel = { createHeaderLabel() }()
     private lazy var nameTextField: UITextField = { createNameTextField() }()
@@ -16,56 +16,61 @@ final class HabitViewController: UIViewController {
     private lazy var cancelButton: UIButton = { createCancelButton() }()
     private lazy var createButton: UIButton = { createCreateButton() }()
     
-    private let colors: [UIColor] = [
-        .ypColorSelection1, .ypColorSelection2, .ypColorSelection3,
-        .ypColorSelection4, .ypColorSelection5, .ypColorSelection6,
-        .ypColorSelection7, .ypColorSelection8, .ypColorSelection9,
-        .ypColorSelection10, .ypColorSelection11, .ypColorSelection12,
-        .ypColorSelection13, .ypColorSelection14, .ypColorSelection15,
-        .ypColorSelection16, .ypColorSelection17, .ypColorSelection18
-    ]
+    private let colors: [UIColor] = Constants.trackerColors
     
-    private var selectedDays: [WeekDay] = []
+    private var options: [TrackerOption] = []
+    private var schedule: [WeekDay] = []
     
-    var onCreateTrackerCallback: ((Tracker)->(Void))?
+    private var optionCellHeight: CGFloat = 75
+    private var tableViewHeightConstraint: NSLayoutConstraint = NSLayoutConstraint()
+    
+    private var trackerKind: TrackerKind = .habit { didSet { trackerKindDidiChange() } }
+    private var onCreateTrackerCallback: ((Tracker)->(Void))?
+    
+    convenience init(_ trackerKind: TrackerKind, onCreate: ((Tracker) -> Void)? = nil) {
+        self.init()
+        self.trackerKind = trackerKind
+        self.onCreateTrackerCallback = onCreate
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        prepare()
+        setup()
+        trackerKindDidiChange()
     }
     
 }
 
 // MARK: - Actions
-extension HabitViewController {
+extension CreateTrackerViewController {
     
     @objc private func clearNameAction() {
         nameTextField.text = ""
         clearNameButton.isHidden = true
     }
     
-    @objc private func cancelButtonAction() {
+    @objc private func cancelAction() {
         dismiss(animated: true)
     }
     
-    @objc private func createButtonAction() {
+    @objc private func createAction() {
         guard let text = nameTextField.text, !text.isEmpty else {
             return
         }
         let tracker = Tracker(title: text,
                                  color: colors[Int.random(in: 0..<colors.count)],
                                  emoji: "😜",
-                                 schedule: selectedDays)
+                                 schedule: schedule)
         onCreateTrackerCallback?(tracker)
     }
     
 }
 
 // MARK: - Helpers
-extension HabitViewController {
+extension CreateTrackerViewController {
     
-    private func prepare() {
+    private func setup() {
         view.backgroundColor = .ypWhite
         
         view.addSubview(headerLabel)
@@ -76,6 +81,8 @@ extension HabitViewController {
         
         nameTextField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 29, height: 17))
         nameTextField.rightView?.addSubview(clearNameButton)
+        
+        tableViewHeightConstraint = tableView.heightAnchor.constraint(equalToConstant: 150)
         
         NSLayoutConstraint.activate([
             view.topAnchor.constraint(equalTo: view.topAnchor),
@@ -92,7 +99,7 @@ extension HabitViewController {
             tableView.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 24),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            tableView.heightAnchor.constraint(equalToConstant: 149),
+            tableViewHeightConstraint,
             cancelButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -34),
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -(view.frame.width/2) - 4),
@@ -104,13 +111,30 @@ extension HabitViewController {
         ])
     }
     
+    private func trackerKindDidiChange() {
+        options = switch trackerKind {
+        case .habit: 
+            [.category, .schedule]
+        default: 
+            [.category]
+        }
+        switch trackerKind {
+        case .irregular:
+            schedule = WeekDay.allCases
+        default:
+            schedule = []
+        }
+        tableViewHeightConstraint.constant = CGFloat(options.count) * optionCellHeight
+        tableView.reloadData()
+    }
+    
     private func showSchedule() {
         let vc = ScheduleViewController()
         vc.onDoneCallback = { [weak self] in
             guard let self else {
                 return
             }
-            selectedDays = $0
+            schedule = $0
             dismiss(animated: true)
         }
         present(vc, animated: true, completion: nil)
@@ -119,7 +143,7 @@ extension HabitViewController {
 }
 
 // MARK: - Factory
-extension HabitViewController {
+extension CreateTrackerViewController {
     
     private func createHeaderLabel() -> UILabel {
         let label = UILabel()
@@ -153,8 +177,9 @@ extension HabitViewController {
         tableView.layer.cornerRadius = 16
         tableView.separatorStyle = .none
         tableView.backgroundColor = .ypBackgroundGray
-        tableView.register(HabitTableViewCell.self,
-                           forCellReuseIdentifier: HabitTableViewCell.reuseIdentifier)
+        tableView.isScrollEnabled = false
+        tableView.register(CreateTrackerTableViewCell.self,
+                           forCellReuseIdentifier: CreateTrackerTableViewCell.reuseIdentifier)
         tableView.delegate = self
         tableView.dataSource = self
         return tableView
@@ -179,7 +204,7 @@ extension HabitViewController {
         btn.layer.cornerRadius = 16
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         btn.setTitle("Отменить", for: .normal)
-        btn.addTarget(self, action: #selector(cancelButtonAction), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
         return btn
     }
     
@@ -192,7 +217,7 @@ extension HabitViewController {
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         btn.isEnabled = false
         btn.setTitle("Создать", for: .normal)
-        btn.addTarget(self, action: #selector(createButtonAction), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(createAction), for: .touchUpInside)
         return btn
     }
     
@@ -210,7 +235,7 @@ extension HabitViewController {
 }
 
 // MARK: - UITextFieldDelegate
-extension HabitViewController: UITextFieldDelegate {
+extension CreateTrackerViewController: UITextFieldDelegate {
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         let text = textField.text ?? ""
@@ -227,49 +252,52 @@ extension HabitViewController: UITextFieldDelegate {
 }
 
 // MARK: - UITableViewDelegate
-extension HabitViewController: UITableViewDelegate {
+extension CreateTrackerViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 75
+        return optionCellHeight
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        switch indexPath.row {
-        case 1:
-            showSchedule()
-        default:
+        switch options[indexPath.row] {
+        case .category:
             break
+        case .schedule:
+            showSchedule()
         }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard indexPath.row != options.count - 1 else {
+            return
+        }
         cell.addSubview(createSeparatorViewForCell(cell))
     }
     
 }
 
 // MARK: - UITableViewDataSource
-extension HabitViewController: UITableViewDataSource {
+extension CreateTrackerViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return options.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: HabitTableViewCell.reuseIdentifier,
+            withIdentifier: CreateTrackerTableViewCell.reuseIdentifier,
             for: indexPath
-        ) as? HabitTableViewCell
+        ) as? CreateTrackerTableViewCell
         guard let cell else {
             return UITableViewCell()
         }
         switch indexPath.row {
-        case 0: 
-            cell.titleLabel.text = "Категория"
+        case 0:
+            cell.updateLabel(title: "Категория")
         case 1:
-            cell.titleLabel.text = "Расписание"
-        default: 
+            cell.updateLabel(title: "Расписание")
+        default:
             break
         }
         return cell

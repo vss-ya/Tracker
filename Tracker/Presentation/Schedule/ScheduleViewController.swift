@@ -21,7 +21,7 @@ final class ScheduleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        prepare()
+        setup()
     }
     
 }
@@ -42,7 +42,7 @@ extension ScheduleViewController {
 // MARK: - Helpers
 extension ScheduleViewController {
     
-    private func prepare() {
+    private func setup() {
         view.backgroundColor = .ypWhite
         
         view.addSubview(headerLabel)
@@ -69,8 +69,12 @@ extension ScheduleViewController {
     
     private func configure(_ cell: ScheduleTableViewCell, at indexPath: IndexPath) {
         let weekDay = weekDays[indexPath.row]
+        let title = "\(weekDay.name)"
+        let isOn = selectedWeekDays[indexPath.row]
+        
         cell.selectionStyle = .none
-        cell.titleLabel.text = "\(weekDay.name)"
+        cell.updateLabel(title: title)
+        cell.updateSwitchControl(isOn: isOn)
         cell.onSwitchCallback = { [weak self] in
             guard let self else {
                 return

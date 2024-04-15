@@ -17,8 +17,6 @@ final class TrackersViewController: UIViewController {
     private lazy var emptySearchLabel: UILabel = { createEmptySearchLabel() }()
     private lazy var collectionView: UICollectionView = { createCollectionView() }()
     
-    private var safeArea: UILayoutGuide { view.safeAreaLayoutGuide }
-    
     private var trackers: [Tracker] = []
     private var categories: [TrackerCategory] = []
     private var visibleCategories: [TrackerCategory] = []
@@ -35,7 +33,7 @@ final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        prepare()
+        setup()
         
         let category = TrackerCategory(header: "Домашние дела", trackers: trackers) // категория для теста
         categories.append(category)
@@ -70,7 +68,7 @@ extension TrackersViewController {
 // MARK: - Helpers
 extension TrackersViewController {
     
-    private func prepare() {
+    private func setup() {
         view.backgroundColor = .white
         
         view.addSubview(emptyTrackersImageView)
@@ -89,8 +87,8 @@ extension TrackersViewController {
             emptySearchImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             emptySearchLabel.centerXAnchor.constraint(equalTo: emptySearchImageView.centerXAnchor),
             emptySearchLabel.topAnchor.constraint(equalTo: emptySearchImageView.bottomAnchor, constant: 8),
-            collectionView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: 0),
-            collectionView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])

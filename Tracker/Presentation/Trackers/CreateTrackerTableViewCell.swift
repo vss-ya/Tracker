@@ -1,17 +1,17 @@
 //
-//  HabitTableViewCell.swift
+//  CreateTrackerTableViewCell.swift
 //  Tracker
 //
-//  Created by vs on 05.04.2024.
+//  Created by vs on 15.04.2024.
 //
 
 import UIKit
 
-final class HabitTableViewCell: UITableViewCell {
+final class CreateTrackerTableViewCell: UITableViewCell {
     
-    static let reuseIdentifier = "HabitTableViewCell"
+    static let reuseIdentifier = "CreateTrackerTableViewCell"
     
-    var titleLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
@@ -49,4 +49,9 @@ final class HabitTableViewCell: UITableViewCell {
         ])
     }
     
+    func updateLabel(title: String) {
+        titleLabel.text = title
+    }
+    
 }
+

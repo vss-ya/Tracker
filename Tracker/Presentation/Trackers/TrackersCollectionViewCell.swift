@@ -34,7 +34,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        prepare()
+        setup()
     }
     
 }
@@ -51,7 +51,7 @@ extension TrackersCollectionViewCell {
 // MARK: - Helpers
 extension TrackersCollectionViewCell {
     
-    func prepare() {
+    func setup() {
         contentView.layer.cornerRadius = 16
         contentView.layer.masksToBounds = true
         
