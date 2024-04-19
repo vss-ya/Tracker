@@ -1,5 +1,5 @@
 //
-//  CreateTrackerTableViewCell.swift
+//  TrackerOptionTableViewCell.swift
 //  Tracker
 //
 //  Created by vs on 15.04.2024.
@@ -7,14 +7,32 @@
 
 import UIKit
 
-final class CreateTrackerTableViewCell: UITableViewCell {
+final class TrackerOptionTableViewCell: UITableViewCell {
     
-    static let reuseIdentifier = "CreateTrackerTableViewCell"
+    static let reuseIdentifier = "TrackerOptionTableViewCell"
+    
+    private lazy var stackView: UIStackView = {
+        let view = UIStackView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.axis = .vertical
+        view.addArrangedSubview(titleLabel)
+        view.addArrangedSubview(descriptionLabel)
+        return view
+    }()
     
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        label.textColor = .ypBlack
+        label.font = .systemFont(ofSize: 17, weight: .regular)
+        return label
+    }()
+    
+    private let descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .ypGray
+        label.font = .systemFont(ofSize: 17, weight: .regular)
         return label
     }()
     
@@ -26,6 +44,9 @@ final class CreateTrackerTableViewCell: UITableViewCell {
         return image
     }()
     
+    var titleText: String? { didSet { configure() } }
+    var descriptionText: String? { didSet { configure() } }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -36,12 +57,12 @@ final class CreateTrackerTableViewCell: UITableViewCell {
         backgroundColor = .clear
         clipsToBounds = true
         
-        addSubview(titleLabel)
+        addSubview(stackView)
         addSubview(chevronImage)
         
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             chevronImage.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             chevronImage.centerYAnchor.constraint(equalTo: centerYAnchor),
             chevronImage.widthAnchor.constraint(equalToConstant: 24),
@@ -49,8 +70,9 @@ final class CreateTrackerTableViewCell: UITableViewCell {
         ])
     }
     
-    func updateLabel(title: String) {
-        titleLabel.text = title
+    private func configure() {
+        titleLabel.text = titleText
+        descriptionLabel.text = descriptionText
     }
     
 }

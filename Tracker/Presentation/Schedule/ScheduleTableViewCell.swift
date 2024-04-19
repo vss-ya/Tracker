@@ -14,7 +14,8 @@ final class ScheduleTableViewCell: UITableViewCell {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        label.textColor = .ypBlack
+        label.font = .systemFont(ofSize: 17, weight: .regular)
         return label
     }()
     
@@ -26,6 +27,8 @@ final class ScheduleTableViewCell: UITableViewCell {
         return switchControl
     }()
     
+    var titleText: String? { didSet { configure() } }
+    var isOn: Bool = false { didSet { configure() } }
     var onSwitchCallback: ((Bool) -> (Void))?
     
     required init?(coder: NSCoder) {
@@ -49,16 +52,13 @@ final class ScheduleTableViewCell: UITableViewCell {
         ])
     }
     
-    func updateLabel(title: String) {
-        titleLabel.text = title
-    }
-    
-    func updateSwitchControl(isOn: Bool) {
-        switchControl.isOn = isOn
-    }
-    
     @objc private func onSwitchAction() {
         onSwitchCallback?(switchControl.isOn)
+    }
+    
+    private func configure() {
+        titleLabel.text = titleText
+        switchControl.isOn = isOn
     }
     
 }

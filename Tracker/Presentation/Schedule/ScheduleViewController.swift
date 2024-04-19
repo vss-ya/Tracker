@@ -42,6 +42,18 @@ extension ScheduleViewController {
 // MARK: - Helpers
 extension ScheduleViewController {
     
+    func setSelectedWeekDays(_ days: [WeekDay]) {
+        for day in days {
+            guard let index = weekDays.firstIndex(of: day) else {
+                continue
+            }
+            selectedWeekDays[index] = true
+        }
+        if isViewLoaded {
+            tableView.reloadData()
+        }
+    }
+    
     private func setup() {
         view.backgroundColor = .ypWhite
         
@@ -73,8 +85,8 @@ extension ScheduleViewController {
         let isOn = selectedWeekDays[indexPath.row]
         
         cell.selectionStyle = .none
-        cell.updateLabel(title: title)
-        cell.updateSwitchControl(isOn: isOn)
+        cell.titleText = title
+        cell.isOn = isOn
         cell.onSwitchCallback = { [weak self] in
             guard let self else {
                 return
@@ -92,7 +104,7 @@ extension ScheduleViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Расписание"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .ypBlack
         return label
     }
@@ -116,7 +128,7 @@ extension ScheduleViewController {
         btn.setTitleColor(.ypWhite, for: .normal)
         btn.backgroundColor = .ypBlack
         btn.layer.cornerRadius = 16
-        btn.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         btn.setTitle("Готово", for: .normal)
         btn.addTarget(self, action: #selector(doneAction), for: .touchUpInside)
         return btn

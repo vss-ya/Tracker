@@ -49,7 +49,7 @@ final class AddTrackerViewController: UIViewController {
     private func createHeaderLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .ypBlack
         label.text = "Создание трекера"
         return label
@@ -69,7 +69,7 @@ final class AddTrackerViewController: UIViewController {
         btn.setTitleColor(.ypWhite, for: .normal)
         btn.backgroundColor = .ypBlack
         btn.layer.cornerRadius = 16
-        btn.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         btn.setTitle(title, for: .normal)
         btn.addTarget(self, action: action, for: .touchUpInside)
         return btn
