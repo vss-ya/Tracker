@@ -50,9 +50,9 @@ final class ScheduleTableViewCell: UITableViewCell {
         clipsToBounds = true
         layer.cornerRadius = 16
         
-        addSubview(titleLabel)
-        addSubview(switchControl)
-        addSubview(separatorView)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(switchControl)
+        contentView.addSubview(separatorView)
         
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),

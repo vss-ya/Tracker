@@ -66,9 +66,9 @@ final class TrackerOptionTableViewCell: UITableViewCell {
         clipsToBounds = true
         layer.cornerRadius = 16
         
-        addSubview(stackView)
-        addSubview(chevronImage)
-        addSubview(separatorView)
+        contentView.addSubview(stackView)
+        contentView.addSubview(chevronImage)
+        contentView.addSubview(separatorView)
         
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),

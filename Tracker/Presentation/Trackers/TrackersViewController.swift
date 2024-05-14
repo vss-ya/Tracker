@@ -51,7 +51,7 @@ extension TrackersViewController {
             guard let self else {
                 return
             }
-            add(tracker: $0)
+            add(tracker: $0, category: $1)
             dismiss(animated: true)
         }
         present(vc, animated: true, completion: nil)
@@ -67,7 +67,17 @@ extension TrackersViewController {
 extension TrackersViewController: TrackerStoreDelegate {
     
     func storeDidChange(_ store: TrackerStore) {
-        trackers = trackerStore.trackers
+        trackers = store.trackers
+        collectionView.reloadData()
+    }
+    
+}
+
+// MARK: - TrackerStoreDelegate
+extension TrackersViewController: TrackerCategoryStoreDelegate {
+    
+    func storeDidChange(_ store: TrackerCategoryStore) {
+        categories = store.trackerCategories
         collectionView.reloadData()
     }
     
@@ -77,7 +87,7 @@ extension TrackersViewController: TrackerStoreDelegate {
 extension TrackersViewController: TrackerRecordStoreDelegate {
     
     func storeDidChange(_ store: TrackerRecordStore) {
-        completedTrackers = trackerRecordStore.trackerRecords
+        completedTrackers = store.trackerRecords
         collectionView.reloadData()
     }
     
@@ -91,6 +101,7 @@ extension TrackersViewController {
         setupConstraints()
         
         trackerStore.delegate = self
+        trackerCategoryStore.delegate = self
         trackerRecordStore.delegate = self
     }
     
@@ -139,7 +150,7 @@ extension TrackersViewController {
     private func loadData() {
         trackers = trackerStore.trackers
         completedTrackers = trackerRecordStore.trackerRecords
-        categories = [TrackerCategory(header: "Домашние дела", trackers: trackers)]
+        categories = trackerCategoryStore.trackerCategories
         
         filterVisibleCategories()
         updateScreen()
@@ -216,13 +227,9 @@ extension TrackersViewController {
         updateScreen()
     }
     
-    private func add(tracker: Tracker) {
+    private func add(tracker: Tracker, category: TrackerCategory) {
         trackerStore.save(tracker)
-        categories = categories.map {
-            var trackers = $0.trackers
-            trackers.append(tracker)
-            return TrackerCategory(header: $0.header, trackers: trackers)
-        }
+        trackerCategoryStore.addToCategory(withHeader: category.header, tracker: tracker)
         filterTrackers()
     }
     
