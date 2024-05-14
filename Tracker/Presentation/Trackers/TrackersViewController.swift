@@ -17,6 +17,10 @@ final class TrackersViewController: UIViewController {
     private lazy var emptySearchLabel: UILabel = { createEmptySearchLabel() }()
     private lazy var collectionView: UICollectionView = { createCollectionView() }()
     
+    private let trackerStore = TrackerStore()
+    private let trackerCategoryStore = TrackerCategoryStore()
+    private let trackerRecordStore = TrackerRecordStore()
+    
     private var trackers: [Tracker] = []
     private var categories: [TrackerCategory] = []
     private var visibleCategories: [TrackerCategory] = []
@@ -32,13 +36,8 @@ final class TrackersViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setup()
-        
-        let category = TrackerCategory(header: "Домашние дела", trackers: trackers) // категория для теста
-        categories.append(category)
-        
-        showDefaultScreen()
+        loadData()
     }
     
 }
@@ -53,7 +52,6 @@ extension TrackersViewController {
                 return
             }
             add(tracker: $0)
-            collectionView.reloadData()
             dismiss(animated: true)
         }
         present(vc, animated: true, completion: nil)
@@ -65,10 +63,38 @@ extension TrackersViewController {
     
 }
 
+// MARK: - TrackerStoreDelegate
+extension TrackersViewController: TrackerStoreDelegate {
+    
+    func storeDidChange(_ store: TrackerStore) {
+        trackers = trackerStore.trackers
+        collectionView.reloadData()
+    }
+    
+}
+
+// MARK: - TrackerRecordStoreDelegate
+extension TrackersViewController: TrackerRecordStoreDelegate {
+    
+    func storeDidChange(_ store: TrackerRecordStore) {
+        completedTrackers = trackerRecordStore.trackerRecords
+        collectionView.reloadData()
+    }
+    
+}
+
 // MARK: - Helpers
 extension TrackersViewController {
     
     private func setup() {
+        setupViews()
+        setupConstraints()
+        
+        trackerStore.delegate = self
+        trackerRecordStore.delegate = self
+    }
+    
+    private func setupViews() {
         view.backgroundColor = .white
         
         view.addSubview(emptyTrackersImageView)
@@ -77,6 +103,10 @@ extension TrackersViewController {
         view.addSubview(emptySearchLabel)
         view.addSubview(collectionView)
         
+        prepareNavigationBar()
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             emptyTrackersImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             emptyTrackersImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -92,8 +122,6 @@ extension TrackersViewController {
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
-        
-        prepareNavigationBar()
     }
     
     private func prepareNavigationBar() {
@@ -108,9 +136,20 @@ extension TrackersViewController {
         title = "Трекеры"
     }
     
+    private func loadData() {
+        trackers = trackerStore.trackers
+        completedTrackers = trackerRecordStore.trackerRecords
+        categories = [TrackerCategory(header: "Домашние дела", trackers: trackers)]
+        
+        filterVisibleCategories()
+        updateScreen()
+    }
+    
     private func showDefaultScreen() {
         let isEmpty = visibleCategories.isEmpty
         collectionView.isHidden = isEmpty
+        emptyTrackersImageView.isHidden = !isEmpty
+        emptyTrackersLabel.isHidden = !isEmpty
         emptySearchImageView.isHidden = isEmpty
         emptySearchLabel.isHidden = isEmpty
     }
@@ -124,7 +163,15 @@ extension TrackersViewController {
         emptySearchLabel.isHidden = !isEmpty
     }
     
-    private func configure(_ cell: TrackersCollectionViewCell, at indexPath: IndexPath) {
+    private func updateScreen() {
+        if searchText.isEmpty {
+            showDefaultScreen()
+        } else {
+            showSearchScreen()
+        }
+    }
+    
+    private func configure(_ cell: TrackerCollectionViewCell, at indexPath: IndexPath) {
         let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
         let isCompleted = isTrackerCompleted(id: tracker.id)
         let completedDays = completedTrackers.filter {
@@ -147,7 +194,7 @@ extension TrackersViewController {
         }
     }
     
-    private func filterTrackers() {
+    private func filterVisibleCategories() {
         visibleCategories = categories.map {
             let trackers = $0.trackers.filter { tracker in
                 let scheduleContains = tracker.schedule?.contains { day in
@@ -161,12 +208,16 @@ extension TrackersViewController {
         .filter {
             !$0.trackers.isEmpty
         }
-        showSearchScreen()
         collectionView.reloadData()
     }
     
+    private func filterTrackers() {
+        filterVisibleCategories()
+        updateScreen()
+    }
+    
     private func add(tracker: Tracker) {
-        trackers.append(tracker)
+        trackerStore.save(tracker)
         categories = categories.map {
             var trackers = $0.trackers
             trackers.append(tracker)
@@ -190,16 +241,20 @@ extension TrackersViewController {
             return
         }
         let trackerRecord = TrackerRecord(id: id, date: selectedDate)
-        completedTrackers.append(trackerRecord)
+        trackerRecordStore.save(trackerRecord)
         
     }
     
     private func removeCompletedTracker(_ tracker: Tracker) {
         let id = tracker.id
         let selectedDate = datePicker.date
-        completedTrackers.removeAll {
+        let trackerRecord = completedTrackers.first {
             $0.id == id && calendar.isDate($0.date, inSameDayAs: selectedDate)
         }
+        guard let trackerRecord else {
+            return
+        }
+        trackerRecordStore.delete(trackerRecord)
     }
     
 }
@@ -211,7 +266,7 @@ extension TrackersViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .ypBlack
-        label.font = UIFont.systemFont(ofSize: 34, weight: .bold)
+        label.font = .systemFont(ofSize: 34, weight: .bold)
         label.text = "Трекеры"
         return label
     }
@@ -254,7 +309,7 @@ extension TrackersViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .ypBlack
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.font = .systemFont(ofSize: 12, weight: .medium)
         label.text = "Что будем отслеживать?"
         return label
     }
@@ -270,7 +325,7 @@ extension TrackersViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .ypBlack
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.font = .systemFont(ofSize: 12, weight: .medium)
         label.text = "Ничего не найдено"
         return label
     }
@@ -281,11 +336,11 @@ extension TrackersViewController {
         view.allowsMultipleSelection = false
         view.dataSource = self
         view.delegate = self
-        view.register(TrackersCollectionViewCell.self, 
-                      forCellWithReuseIdentifier: TrackersCollectionViewCell.reuseIdentifier)
-        view.register(TrackersSectionHeaderView.self,
+        view.register(TrackerCollectionViewCell.self, 
+                      forCellWithReuseIdentifier: TrackerCollectionViewCell.reuseIdentifier)
+        view.register(TrackerCollectionHeaderView.self,
                       forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
-                      withReuseIdentifier: TrackersSectionHeaderView.reuseIdentifier)
+                      withReuseIdentifier: TrackerCollectionHeaderView.reuseIdentifier)
         return view
     }
     
@@ -331,9 +386,9 @@ extension TrackersViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: TrackersCollectionViewCell.reuseIdentifier,
+            withReuseIdentifier: TrackerCollectionViewCell.reuseIdentifier,
             for: indexPath
-        ) as? TrackersCollectionViewCell
+        ) as? TrackerCollectionViewCell
         guard let cell else {
             return UICollectionViewCell()
         }
@@ -348,9 +403,9 @@ extension TrackersViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(
             ofKind: kind,
-            withReuseIdentifier: TrackersSectionHeaderView.reuseIdentifier,
+            withReuseIdentifier: TrackerCollectionHeaderView.reuseIdentifier,
             for: indexPath
-        ) as? TrackersSectionHeaderView
+        ) as? TrackerCollectionHeaderView
         guard let header else {
             return UICollectionReusableView()
         }

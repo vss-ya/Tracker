@@ -1,5 +1,5 @@
 //
-//  TrackersCollectionViewCell.swift
+//  TrackerCollectionViewCell.swift
 //  Tracker
 //
 //  Created by vs on 05.04.2024.
@@ -7,9 +7,9 @@
 
 import UIKit
 
-final class TrackersCollectionViewCell: UICollectionViewCell {
+final class TrackerCollectionViewCell: UICollectionViewCell {
     
-    static let reuseIdentifier = "TrackersCollectionViewCell"
+    static let reuseIdentifier = "TrackerCollectionViewCell"
     
     private lazy var cardView: UIView = { createCardView() }()
     private lazy var emojiBackgroundView: UIView = { createEmojiBackgroundView() }()
@@ -40,7 +40,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
 }
 
 // MARK: - Actions
-extension TrackersCollectionViewCell {
+extension TrackerCollectionViewCell {
     
     @objc private func addAction() {
         completeCallback?()
@@ -49,7 +49,7 @@ extension TrackersCollectionViewCell {
 }
 
 // MARK: - Helpers
-extension TrackersCollectionViewCell {
+extension TrackerCollectionViewCell {
     
     func setup() {
         contentView.layer.cornerRadius = 16
@@ -105,7 +105,7 @@ extension TrackersCollectionViewCell {
 }
 
 // MARK: - Factory
-extension TrackersCollectionViewCell {
+extension TrackerCollectionViewCell {
     
     private func createCardView() -> UIView {
         let view = UIView()
@@ -130,7 +130,7 @@ extension TrackersCollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.frame = CGRect(x: 0, y: 0, width: 18, height: 18)
-        label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        label.font = .systemFont(ofSize: 14, weight: .medium)
         return label
     }
     
@@ -138,7 +138,7 @@ extension TrackersCollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.frame = CGRect(x: 120, y: 106, width: 143, height: 34)
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .ypWhite
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -150,7 +150,7 @@ extension TrackersCollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.frame = CGRect(x: 120, y: 106, width: 101, height: 18)
-        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .ypBlack
         return label
     }
