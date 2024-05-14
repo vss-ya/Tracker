@@ -62,7 +62,8 @@ final class TrackerCategoryStore: NSObject {
     
     func addrToCategory(with header: String, tracker: Tracker) {
         guard let coreData = fetch(with: header) else {
-            fatalError()
+            assertionFailure("Invalid Configuration")
+            return
         }
         coreData.trackers = trackerCategories.first {
             $0.header == header

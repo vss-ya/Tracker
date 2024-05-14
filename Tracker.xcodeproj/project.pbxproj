@@ -37,6 +37,7 @@
 		576D7D3F2BBFAC570033E479 /* AddTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576D7D3E2BBFAC570033E479 /* AddTrackerViewController.swift */; };
 		576D7D4B2BBFAD380033E479 /* ScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576D7D492BBFAD380033E479 /* ScheduleTableViewCell.swift */; };
 		576D7D4C2BBFAD380033E479 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576D7D4A2BBFAD380033E479 /* ScheduleViewController.swift */; };
+		57EC04B52BF36A7C00FAFFA9 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57EC04B42BF36A7C00FAFFA9 /* OnboardingViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +73,7 @@
 		576D7D3E2BBFAC570033E479 /* AddTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTrackerViewController.swift; sourceTree = "<group>"; };
 		576D7D492BBFAD380033E479 /* ScheduleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleTableViewCell.swift; sourceTree = "<group>"; };
 		576D7D4A2BBFAD380033E479 /* ScheduleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
+		57EC04B42BF36A7C00FAFFA9 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,6 +179,7 @@
 		576D7D382BBFA7200033E479 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				57EC04B32BF36A5F00FAFFA9 /* Onboarding */,
 				576D7D392BBFA9630033E479 /* Trackers */,
 				576D7D482BBFACE90033E479 /* Schedule */,
 				576D7D2A2BBEBD5F0033E479 /* StatisticViewController.swift */,
@@ -209,6 +212,14 @@
 				576D7D4A2BBFAD380033E479 /* ScheduleViewController.swift */,
 			);
 			path = Schedule;
+			sourceTree = "<group>";
+		};
+		57EC04B32BF36A5F00FAFFA9 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				57EC04B42BF36A7C00FAFFA9 /* OnboardingViewController.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -294,6 +305,7 @@
 				57493A442BD8DCFF00A5098E /* TrackersCoreData.xcdatamodeld in Sources */,
 				5706586C2BD25658003FD7B1 /* TrackerEmojiCollectionViewCell.swift in Sources */,
 				5715A6802BCD3BD0003FB557 /* TrackerOptionTableViewCell.swift in Sources */,
+				57EC04B52BF36A7C00FAFFA9 /* OnboardingViewController.swift in Sources */,
 				576D7D152BBEB5B10033E479 /* AppDelegate.swift in Sources */,
 				57493A522BD8F32500A5098E /* TrackerStore.swift in Sources */,
 				570658702BD25B0D003FD7B1 /* TrackerColorCollectionHeaderView.swift in Sources */,

@@ -11,10 +11,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
     
+    private var userDefaults: UserDefaults = UserDefaults.standard
+    private var skipOnboarding: Bool {
+        set { userDefaults.set(newValue, forKey: "SkipOnboarding") }
+        get { userDefaults.bool(forKey: "SkipOnboarding") }
+    }
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
-        window?.rootViewController = TabBarController()
+        if skipOnboarding {
+            window?.rootViewController = TabBarController()
+        } else {
+            window?.rootViewController = OnboardingViewController()
+            skipOnboarding = true
+        }
         window?.makeKeyAndVisible()
     }
 
