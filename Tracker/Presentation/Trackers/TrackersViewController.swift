@@ -142,12 +142,14 @@ extension TrackersViewController {
         categories = [TrackerCategory(header: "Домашние дела", trackers: trackers)]
         
         filterVisibleCategories()
-        showDefaultScreen()
+        updateScreen()
     }
     
     private func showDefaultScreen() {
         let isEmpty = visibleCategories.isEmpty
         collectionView.isHidden = isEmpty
+        emptyTrackersImageView.isHidden = !isEmpty
+        emptyTrackersLabel.isHidden = !isEmpty
         emptySearchImageView.isHidden = isEmpty
         emptySearchLabel.isHidden = isEmpty
     }
@@ -159,6 +161,14 @@ extension TrackersViewController {
         emptyTrackersLabel.isHidden = isEmpty
         emptySearchImageView.isHidden = !isEmpty
         emptySearchLabel.isHidden = !isEmpty
+    }
+    
+    private func updateScreen() {
+        if searchText.isEmpty {
+            showDefaultScreen()
+        } else {
+            showSearchScreen()
+        }
     }
     
     private func configure(_ cell: TrackerCollectionViewCell, at indexPath: IndexPath) {
@@ -203,7 +213,7 @@ extension TrackersViewController {
     
     private func filterTrackers() {
         filterVisibleCategories()
-        showSearchScreen()
+        updateScreen()
     }
     
     private func add(tracker: Tracker) {
