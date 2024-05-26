@@ -37,6 +37,7 @@
 		576D7D3F2BBFAC570033E479 /* AddTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576D7D3E2BBFAC570033E479 /* AddTrackerViewController.swift */; };
 		576D7D4B2BBFAD380033E479 /* ScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576D7D492BBFAD380033E479 /* ScheduleTableViewCell.swift */; };
 		576D7D4C2BBFAD380033E479 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576D7D4A2BBFAD380033E479 /* ScheduleViewController.swift */; };
+		57E854F92C02FB2000615E9D /* UserSettingsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E854F82C02FB2000615E9D /* UserSettingsStorage.swift */; };
 		57EC04B52BF36A7C00FAFFA9 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57EC04B42BF36A7C00FAFFA9 /* OnboardingViewController.swift */; };
 		57EC04BA2BF385DA00FAFFA9 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57EC04B92BF385D900FAFFA9 /* CategoryViewController.swift */; };
 		57EC04BC2BF3861000FAFFA9 /* CategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57EC04BB2BF3861000FAFFA9 /* CategoryTableViewCell.swift */; };
@@ -78,6 +79,7 @@
 		576D7D3E2BBFAC570033E479 /* AddTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTrackerViewController.swift; sourceTree = "<group>"; };
 		576D7D492BBFAD380033E479 /* ScheduleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleTableViewCell.swift; sourceTree = "<group>"; };
 		576D7D4A2BBFAD380033E479 /* ScheduleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
+		57E854F82C02FB2000615E9D /* UserSettingsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsStorage.swift; sourceTree = "<group>"; };
 		57EC04B42BF36A7C00FAFFA9 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		57EC04B92BF385D900FAFFA9 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		57EC04BB2BF3861000FAFFA9 /* CategoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewCell.swift; sourceTree = "<group>"; };
@@ -145,14 +147,15 @@
 			isa = PBXGroup;
 			children = (
 				576D7D142BBEB5B10033E479 /* AppDelegate.swift */,
-				576D7D1F2BBEB5B20033E479 /* LaunchScreen.storyboard */,
 				576D7D162BBEB5B10033E479 /* SceneDelegate.swift */,
 				57493A462BD8E44D00A5098E /* CoreData */,
 				576D7D352BBFA0680033E479 /* Enums */,
 				57493A4D2BD8EC8D00A5098E /* Extensions */,
+				576D7D1F2BBEB5B20033E479 /* LaunchScreen.storyboard */,
 				576D7D322BBF9F510033E479 /* Models */,
 				576D7D382BBFA7200033E479 /* Presentation */,
 				576D7D302BBECC190033E479 /* Resources */,
+				57E854F72C02FAEF00615E9D /* Storage */,
 			);
 			path = Tracker;
 			sourceTree = "<group>";
@@ -224,6 +227,14 @@
 				576D7D4A2BBFAD380033E479 /* ScheduleViewController.swift */,
 			);
 			path = Schedule;
+			sourceTree = "<group>";
+		};
+		57E854F72C02FAEF00615E9D /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				57E854F82C02FB2000615E9D /* UserSettingsStorage.swift */,
+			);
+			path = Storage;
 			sourceTree = "<group>";
 		};
 		57EC04B32BF36A5F00FAFFA9 /* Onboarding */ = {
@@ -339,6 +350,7 @@
 				576D7D3B2BBFA97D0033E479 /* TrackerCollectionViewCell.swift in Sources */,
 				576D7D2B2BBEBD5F0033E479 /* StatisticViewController.swift in Sources */,
 				57EC04BC2BF3861000FAFFA9 /* CategoryTableViewCell.swift in Sources */,
+				57E854F92C02FB2000615E9D /* UserSettingsStorage.swift in Sources */,
 				5715A6822BCD433E003FB557 /* TrackerOption.swift in Sources */,
 				576D7D172BBEB5B10033E479 /* SceneDelegate.swift in Sources */,
 				5715A6782BCD2DFC003FB557 /* TrackerRecord.swift in Sources */,
