@@ -110,16 +110,15 @@ extension ScheduleViewController {
     }
     
     private func createTableView() -> UITableView {
-        let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.layer.cornerRadius = 16
-        tableView.separatorStyle = .none
-        tableView.backgroundColor = .ypBackgroundGray
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(ScheduleTableViewCell.self,
-                           forCellReuseIdentifier: ScheduleTableViewCell.reuseIdentifier)
-        return tableView
+        let view = UITableView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 16
+        view.separatorStyle = .none
+        view.delegate = self
+        view.dataSource = self
+        view.register(ScheduleTableViewCell.self,
+                      forCellReuseIdentifier: ScheduleTableViewCell.reuseIdentifier)
+        return view
     }
     
     private func createDoneButton() -> UIButton {
@@ -134,17 +133,6 @@ extension ScheduleViewController {
         return btn
     }
     
-    private func createSeparatorViewForCell(_ cell: UITableViewCell) -> UIView {
-        let inset = 16.0
-        let width = tableView.bounds.width - inset * 2
-        let height = 1.0
-        let x = inset
-        let y = cell.frame.height - height
-        let view = UIView(frame: CGRect(x: x, y: y, width: width, height: height))
-        view.backgroundColor = .ypGray
-        return view
-    }
-    
 }
 
 // MARK: - UITableViewDelegate
@@ -155,7 +143,16 @@ extension ScheduleViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        cell.addSubview(createSeparatorViewForCell(cell))
+        let cell = cell as? ScheduleTableViewCell
+        cell?.isSeparatorViewHidden = (indexPath.row == weekDays.count - 1)
+        var maskedCorners: CACornerMask = []
+        if indexPath.row == 0 {
+            maskedCorners.insert([.layerMinXMinYCorner, .layerMaxXMinYCorner])
+        }
+        if indexPath.row == weekDays.count - 1 {
+            maskedCorners.insert([.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
+        }
+        cell?.layer.maskedCorners = maskedCorners
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -52,25 +52,20 @@ final class TrackerCategoryStore: NSObject {
     func save(_ obj: TrackerCategory) {
         let coreData = TrackerCategoryCoreData(context: context)
         coreData.header = obj.header
-        coreData.trackers = obj.trackers.compactMap {
-            let cd = TrackerCoreData(context: context)
-            cd.id = $0.id
-            return cd
-        }
+        coreData.trackers = obj.trackers.compactMap { $0.id }
         try? context.save()
     }
     
-    func addrToCategory(with header: String, tracker: Tracker) {
+    func addToCategory(withHeader header: String, tracker: Tracker) {
         guard let coreData = fetch(with: header) else {
-            fatalError()
+            assertionFailure("Invalid Configuration")
+            return
         }
-        coreData.trackers = trackerCategories.first {
-            $0.header == header
-        }?.trackers.compactMap {
-            let trackerCoreData = TrackerCoreData(context: context)
-            trackerCoreData.id = $0.id
-            return trackerCoreData
+        let trackers = coreData.trackers ?? []
+        guard !trackers.contains(where: { $0 == tracker.id }) else {
+            return
         }
+        coreData.trackers = trackers + [tracker.id]
         try? context.save()
     }
     
@@ -85,7 +80,7 @@ final class TrackerCategoryStore: NSObject {
             header: header,
             trackers: trackerStore.trackers.filter { tracker in
                 trackers.contains(where: {
-                    tracker.id == $0.id
+                    tracker.id == $0
                 })
             }
         )

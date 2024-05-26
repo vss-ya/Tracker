@@ -11,10 +11,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
     
+    private var userSettings: UserSettingsStorage = .shared
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
-        window?.rootViewController = TabBarController()
+        if userSettings.skipOnboarding {
+            window?.rootViewController = TabBarController()
+        } else {
+            window?.rootViewController = OnboardingViewController { [weak self]() in
+                guard let self else { return }
+                userSettings.skipOnboarding = true
+                window?.rootViewController = TabBarController()
+            }
+        }
         window?.makeKeyAndVisible()
     }
 

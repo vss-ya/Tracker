@@ -13,7 +13,7 @@ final class AddTrackerViewController: UIViewController {
     private lazy var habitButton: UIButton = { createHabitButton() }()
     private lazy var irregularEventButton: UIButton = { createIrregularEventButton() }()
     
-    var onCreateTrackerCallback: ((Tracker)->(Void))?
+    var onCreateTrackerCallback: ((Tracker, TrackerCategory)->(Void))?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,7 +85,7 @@ extension AddTrackerViewController {
             guard let self else {
                 return
             }
-            onCreateTrackerCallback?($0)
+            onCreateTrackerCallback?($0, $1)
             dismiss(animated: true, completion: nil)
         }
         present(vc, animated: true)

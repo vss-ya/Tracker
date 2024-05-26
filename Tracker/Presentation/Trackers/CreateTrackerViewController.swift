@@ -22,7 +22,9 @@ final class CreateTrackerViewController: UIViewController {
     private let emojis: [String] = Constants.trackerEmojis
     private let colors: [UIColor] = Constants.trackerColors
     
+    private var name: String { (nameTextField.text ?? "").trimmed() }
     private var options: [TrackerOption] = []
+    private var category: TrackerCategory?
     private var schedule: [WeekDay] = []
     private var emoji: String?
     private var color: UIColor?
@@ -31,12 +33,12 @@ final class CreateTrackerViewController: UIViewController {
     private var tableViewHeightConstraint: NSLayoutConstraint = NSLayoutConstraint()
     
     private var trackerKind: TrackerKind = .habit { didSet { trackerKindDidiChange() } }
-    private var onCreateTrackerCallback: ((Tracker)->(Void))?
+    private var onCreateCallback: ((Tracker, TrackerCategory)->(Void))?
     
-    convenience init(_ trackerKind: TrackerKind, onCreate: ((Tracker) -> Void)? = nil) {
+    convenience init(_ trackerKind: TrackerKind, onCreate: ((Tracker, TrackerCategory) -> Void)? = nil) {
         self.init()
         self.trackerKind = trackerKind
-        self.onCreateTrackerCallback = onCreate
+        self.onCreateCallback = onCreate
         self.trackerKindDidiChange()
     }
     
@@ -62,19 +64,19 @@ extension CreateTrackerViewController {
     }
     
     @objc private func createAction() {
-        guard 
-            let text = nameTextField.text,
+        guard
+            let category = category,
             let emoji = emoji,
             let color = color else
         {
             return
         }
         let tracker = Tracker(id: UUID(),
-                              title: text,
+                              title: name,
                               color: color,
                               emoji: emoji,
                               schedule: schedule)
-        onCreateTrackerCallback?(tracker)
+        onCreateCallback?(tracker, category)
     }
     
 }
@@ -168,6 +170,20 @@ extension CreateTrackerViewController {
         tableView.reloadData()
     }
     
+    private func showCategory() {
+        let vc = CategoryViewController()
+        vc.setSelectedCategory(category)
+        vc.onDoneCallback = { [weak self] in
+            guard let self else {
+                return
+            }
+            category = $0
+            updateViews()
+            dismiss(animated: true)
+        }
+        present(vc, animated: true, completion: nil)
+    }
+    
     private func showSchedule() {
         let vc = ScheduleViewController()
         vc.setSelectedWeekDays(schedule)
@@ -183,15 +199,15 @@ extension CreateTrackerViewController {
     }
     
     private func updateViews() {
-        let text = nameTextField.text ?? ""
-        let flags = [!text.isEmpty, !schedule.isEmpty, emoji != nil, color != nil]
+        let text = name
+        let flags = [!text.isEmpty, category != nil, !schedule.isEmpty, emoji != nil, color != nil]
         let isEnabled = flags.filter({ !$0 }).isEmpty
-//        let categoryCell = tableView.cellForRow(at: .init(row: 0, section: 0))
+        let categoryCell = tableView.cellForRow(at: .init(row: 0, section: 0))
         let scheduleCell = tableView.cellForRow(at: .init(row: 1, section: 0))
         
-//        if case let cell as TrackerOptionTableViewCell = categoryCell {
-//            
-//        }
+        if case let cell as TrackerOptionTableViewCell = categoryCell {
+            cell.descriptionText = category?.header
+        }
         
         if case let cell as TrackerOptionTableViewCell = scheduleCell {
             let description = switch schedule.count {
@@ -263,7 +279,6 @@ extension CreateTrackerViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 16
         view.separatorStyle = .none
-        view.backgroundColor = .ypBackgroundGray
         view.isScrollEnabled = false
         view.register(TrackerOptionTableViewCell.self,
                       forCellReuseIdentifier: TrackerOptionTableViewCell.reuseIdentifier)
@@ -329,17 +344,6 @@ extension CreateTrackerViewController {
         return btn
     }
     
-    private func createSeparatorViewForCell(_ cell: UITableViewCell) -> UIView {
-        let inset = 16.0
-        let width = tableView.bounds.width - inset * 2
-        let height = 1.0
-        let x = inset
-        let y = cell.frame.height - height
-        let view = UIView(frame: CGRect(x: x, y: y, width: width, height: height))
-        view.backgroundColor = .ypGray
-        return view
-    }
-    
 }
 
 // MARK: - UITextFieldDelegate
@@ -395,17 +399,23 @@ extension CreateTrackerViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch options[indexPath.row] {
         case .category:
-            break
+            showCategory()
         case .schedule:
             showSchedule()
         }
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard indexPath.row != options.count - 1 else {
-            return
+        let cell = cell as? TrackerOptionTableViewCell
+        cell?.isSeparatorViewHidden = (indexPath.row == options.count - 1)
+        var maskedCorners: CACornerMask = []
+        if indexPath.row == 0 {
+            maskedCorners.insert([.layerMinXMinYCorner, .layerMaxXMinYCorner])
         }
-        cell.addSubview(createSeparatorViewForCell(cell))
+        if indexPath.row == options.count - 1 {
+            maskedCorners.insert([.layerMinXMaxYCorner, .layerMaxXMaxYCorner])
+        }
+        cell?.layer.maskedCorners = maskedCorners
     }
     
 }

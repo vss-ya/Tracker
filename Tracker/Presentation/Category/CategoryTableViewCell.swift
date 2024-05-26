@@ -1,26 +1,17 @@
 //
-//  TrackerOptionTableViewCell.swift
+//  CategoryTableViewCell.swift
 //  Tracker
 //
-//  Created by vs on 15.04.2024.
+//  Created by vs on 14.05.2024.
 //
 
 import UIKit
 
-final class TrackerOptionTableViewCell: UITableViewCell {
+final class CategoryTableViewCell: UITableViewCell {
     
-    static let reuseIdentifier = "TrackerOptionTableViewCell"
+    static let reuseIdentifier = "CategoryTableViewCell"
     
-    private lazy var stackView: UIStackView = {
-        let view = UIStackView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.axis = .vertical
-        view.addArrangedSubview(titleLabel)
-        view.addArrangedSubview(descriptionLabel)
-        return view
-    }()
-    
-    private let titleLabel: UILabel = {
+    private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .ypBlack
@@ -28,18 +19,10 @@ final class TrackerOptionTableViewCell: UITableViewCell {
         return label
     }()
     
-    private let descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .ypGray
-        label.font = .systemFont(ofSize: 17, weight: .regular)
-        return label
-    }()
-    
-    private let chevronImage: UIImageView = {
+    private let checkImage: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.image = UIImage(named: "Chevron")
+        image.image = UIImage(named: "CategoryCheck")
         image.tintColor = .ypGray
         return image
     }()
@@ -52,8 +35,9 @@ final class TrackerOptionTableViewCell: UITableViewCell {
     }()
     
     var titleText: String? { didSet { configure() } }
-    var descriptionText: String? { didSet { configure() } }
+    var isChecked: Bool = false { didSet { configure() } }
     var isSeparatorViewHidden: Bool = false { didSet { configure() } }
+    var onSwitchCallback: ((Bool) -> (Void))?
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -66,17 +50,15 @@ final class TrackerOptionTableViewCell: UITableViewCell {
         clipsToBounds = true
         layer.cornerRadius = 16
         
-        contentView.addSubview(stackView)
-        contentView.addSubview(chevronImage)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(checkImage)
         contentView.addSubview(separatorView)
         
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            chevronImage.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            chevronImage.centerYAnchor.constraint(equalTo: centerYAnchor),
-            chevronImage.widthAnchor.constraint(equalToConstant: 24),
-            chevronImage.heightAnchor.constraint(equalToConstant: 24),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            checkImage.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            checkImage.centerYAnchor.constraint(equalTo: centerYAnchor),
             separatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             separatorView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             separatorView.heightAnchor.constraint(equalToConstant: 1),
@@ -86,9 +68,8 @@ final class TrackerOptionTableViewCell: UITableViewCell {
     
     private func configure() {
         titleLabel.text = titleText
-        descriptionLabel.text = descriptionText
+        checkImage.isHidden = !isChecked
         separatorView.isHidden = isSeparatorViewHidden
     }
     
 }
-

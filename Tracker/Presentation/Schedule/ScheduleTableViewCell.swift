@@ -20,15 +20,23 @@ final class ScheduleTableViewCell: UITableViewCell {
     }()
     
     private lazy var switchControl: UISwitch = {
-        let switchControl = UISwitch()
-        switchControl.translatesAutoresizingMaskIntoConstraints = false
-        switchControl.onTintColor = UIColor.ypBlue
-        switchControl.addTarget(self, action: #selector(self.onSwitchAction), for: .valueChanged)
-        return switchControl
+        let control = UISwitch()
+        control.translatesAutoresizingMaskIntoConstraints = false
+        control.onTintColor = UIColor.ypBlue
+        control.addTarget(self, action: #selector(self.onSwitchAction), for: .valueChanged)
+        return control
+    }()
+    
+    private let separatorView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .ypGray
+        return view
     }()
     
     var titleText: String? { didSet { configure() } }
     var isOn: Bool = false { didSet { configure() } }
+    var isSeparatorViewHidden: Bool = false { didSet { configure() } }
     var onSwitchCallback: ((Bool) -> (Void))?
     
     required init?(coder: NSCoder) {
@@ -38,17 +46,23 @@ final class ScheduleTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        backgroundColor = .clear
+        backgroundColor = .ypBackgroundGray
         clipsToBounds = true
+        layer.cornerRadius = 16
         
         contentView.addSubview(titleLabel)
-        addSubview(switchControl)
+        contentView.addSubview(switchControl)
+        contentView.addSubview(separatorView)
         
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             switchControl.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            switchControl.centerYAnchor.constraint(equalTo: centerYAnchor)
+            switchControl.centerYAnchor.constraint(equalTo: centerYAnchor),
+            separatorView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            separatorView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            separatorView.heightAnchor.constraint(equalToConstant: 1),
+            separatorView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
         ])
     }
     
@@ -59,6 +73,7 @@ final class ScheduleTableViewCell: UITableViewCell {
     private func configure() {
         titleLabel.text = titleText
         switchControl.isOn = isOn
+        separatorView.isHidden = isSeparatorViewHidden
     }
     
 }
