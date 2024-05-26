@@ -15,7 +15,7 @@ final class CategoryViewController: UIViewController {
     private lazy var tableView: UITableView = { createTableView() }()
     private lazy var addButton: UIButton = { createAddButton() }()
     
-    private var categoryViewModel: CategoryViewModel = CategoryViewModel()
+    private var categoryViewModel: CategoryViewProtocol = CategoryViewModel()
     private var categories: [TrackerCategory] { categoryViewModel.categories }
     private var selectedCategory: TrackerCategory? { categoryViewModel.selectedCategory }
     private var selectedCategoryIndex: Int? { categoryViewModel.selectedCategoryIndex }
