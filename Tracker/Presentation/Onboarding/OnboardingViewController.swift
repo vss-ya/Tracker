@@ -30,13 +30,19 @@ final class OnboardingViewController: UIPageViewController {
     }()
     
     private var pages: [UIViewController] = []
+    private(set) var onFinishCallback: (()->(Void))?
     
     override init(
         transitionStyle style: UIPageViewController.TransitionStyle,
         navigationOrientation: UIPageViewController.NavigationOrientation,
         options: [UIPageViewController.OptionsKey : Any]? = nil
     ) {
-        super.init(transitionStyle: .scroll, navigationOrientation: navigationOrientation)
+        super.init(transitionStyle: style, navigationOrientation: navigationOrientation)
+    }
+    
+    init(onFinish onFinishCallback: @escaping (()->(Void))) {
+        super.init(transitionStyle: .scroll, navigationOrientation: .horizontal)
+        self.onFinishCallback = onFinishCallback
     }
     
     required init?(coder: NSCoder) {
@@ -49,13 +55,8 @@ final class OnboardingViewController: UIPageViewController {
         setup()
     }
     
-    @objc func buttonAction() {
-        let vc = TabBarController()
-        guard let window = UIApplication.shared.windows.first else {
-            assertionFailure("Invalid Configuration")
-            return
-        }
-        window.rootViewController = vc
+    @objc private func buttonAction() {
+        onFinishCallback?()
     }
     
 }
@@ -63,7 +64,7 @@ final class OnboardingViewController: UIPageViewController {
 // MARK: - Helpers
 private extension OnboardingViewController {
     
-    private func setup() {
+    func setup() {
         setupViews()
         setupConstraints()
         

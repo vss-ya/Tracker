@@ -23,8 +23,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if skipOnboarding {
             window?.rootViewController = TabBarController()
         } else {
-            window?.rootViewController = OnboardingViewController()
-            skipOnboarding = true
+            window?.rootViewController = OnboardingViewController { [weak self]() in
+                guard let self else { return }
+                skipOnboarding = true
+                window?.rootViewController = TabBarController()
+            }
         }
         window?.makeKeyAndVisible()
     }
