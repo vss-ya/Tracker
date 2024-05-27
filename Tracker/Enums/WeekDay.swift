@@ -8,6 +8,7 @@
 import Foundation
 
 enum WeekDay: Int, CaseIterable, Codable {
+    
     case monday = 2
     case tuesday = 3
     case wednesday = 4
@@ -17,40 +18,45 @@ enum WeekDay: Int, CaseIterable, Codable {
     case sunday = 1
     
     var name: String {
+        let weekdaySymbols = calendar.weekdaySymbols
         switch self {
         case .monday:
-            return "Понедельник"
+            return weekdaySymbols[1]
         case .tuesday:
-            return "Вторник"
+            return weekdaySymbols[2]
         case .wednesday:
-            return "Среда"
+            return weekdaySymbols[3]
         case .thursday:
-            return "Четверг"
+            return weekdaySymbols[4]
         case .friday:
-            return "Пятница"
+            return weekdaySymbols[5]
         case .saturday:
-            return "Суббота"
+            return weekdaySymbols[6]
         case .sunday:
-            return "Воскресенье"
+            return weekdaySymbols[0]
         }
     }
     
-    var abbr: String {
+    var shortName: String {
+        let weekdaySymbols = calendar.shortWeekdaySymbols
         switch self {
         case .monday:
-            return "Пн"
+            return weekdaySymbols[1]
         case .tuesday:
-            return "Вт"
+            return weekdaySymbols[2]
         case .wednesday:
-            return "Ср"
+            return weekdaySymbols[3]
         case .thursday:
-            return "Чт"
+            return weekdaySymbols[4]
         case .friday:
-            return "Пт"
+            return weekdaySymbols[5]
         case .saturday:
-            return "Сб"
+            return weekdaySymbols[6]
         case .sunday:
-            return "Вс"
+            return weekdaySymbols[0]
         }
     }
+    
+    private var calendar: Calendar { Calendar.current }
+    
 }

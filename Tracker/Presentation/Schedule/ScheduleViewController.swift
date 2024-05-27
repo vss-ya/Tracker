@@ -81,7 +81,7 @@ extension ScheduleViewController {
     
     private func configure(_ cell: ScheduleTableViewCell, at indexPath: IndexPath) {
         let weekDay = weekDays[indexPath.row]
-        let title = "\(weekDay.name)"
+        let title = "\(weekDay.name.capitalized)"
         let isOn = selectedWeekDays[indexPath.row]
         
         cell.selectionStyle = .none

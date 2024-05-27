@@ -214,7 +214,7 @@ extension CreateTrackerViewController {
             case WeekDay.allCases.count:
                 "Каждый день"
             default:
-                schedule.map({ $0.abbr }).joined(separator: ", ")
+                schedule.map({ $0.shortName }).joined(separator: ", ")
             }
             cell.descriptionText = description
         }
