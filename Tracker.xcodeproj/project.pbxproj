@@ -39,6 +39,7 @@
 		576D7D4C2BBFAD380033E479 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576D7D4A2BBFAD380033E479 /* ScheduleViewController.swift */; };
 		57E854F92C02FB2000615E9D /* UserSettingsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E854F82C02FB2000615E9D /* UserSettingsStorage.swift */; };
 		57E854FE2C04EA9000615E9D /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 57E854FC2C04EA9000615E9D /* Localizable.stringsdict */; };
+		57E855042C04FB7100615E9D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 57E855022C04FB7100615E9D /* Localizable.strings */; };
 		57EC04B52BF36A7C00FAFFA9 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57EC04B42BF36A7C00FAFFA9 /* OnboardingViewController.swift */; };
 		57EC04BA2BF385DA00FAFFA9 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57EC04B92BF385D900FAFFA9 /* CategoryViewController.swift */; };
 		57EC04BC2BF3861000FAFFA9 /* CategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57EC04BB2BF3861000FAFFA9 /* CategoryTableViewCell.swift */; };
@@ -82,6 +83,7 @@
 		57E854F82C02FB2000615E9D /* UserSettingsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsStorage.swift; sourceTree = "<group>"; };
 		57E854FD2C04EA9000615E9D /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		57E855012C04EE0D00615E9D /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ru; path = ru.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		57E855032C04FB7100615E9D /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		57EC04B42BF36A7C00FAFFA9 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		57EC04B92BF385D900FAFFA9 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		57EC04BB2BF3861000FAFFA9 /* CategoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewCell.swift; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 				576D7D1D2BBEB5B20033E479 /* Assets.xcassets */,
 				576D7D222BBEB5B20033E479 /* Info.plist */,
 				57E854FC2C04EA9000615E9D /* Localizable.stringsdict */,
+				57E855022C04FB7100615E9D /* Localizable.strings */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -317,6 +320,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				576D7D212BBEB5B20033E479 /* LaunchScreen.storyboard in Resources */,
+				57E855042C04FB7100615E9D /* Localizable.strings in Resources */,
 				57E854FE2C04EA9000615E9D /* Localizable.stringsdict in Resources */,
 				576D7D1E2BBEB5B20033E479 /* Assets.xcassets in Resources */,
 			);
@@ -384,6 +388,14 @@
 				57E854FD2C04EA9000615E9D /* ru */,
 			);
 			name = Localizable.stringsdict;
+			sourceTree = "<group>";
+		};
+		57E855022C04FB7100615E9D /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				57E855032C04FB7100615E9D /* ru */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

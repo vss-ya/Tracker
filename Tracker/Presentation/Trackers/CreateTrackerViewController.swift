@@ -212,7 +212,7 @@ extension CreateTrackerViewController {
         if case let cell as TrackerOptionTableViewCell = scheduleCell {
             let description = switch schedule.count {
             case WeekDay.allCases.count:
-                "Каждый день"
+                "EveryDay".localized()
             default:
                 schedule.map({ $0.shortName }).joined(separator: ", ")
             }
@@ -241,7 +241,7 @@ extension CreateTrackerViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .ypBlack
-        label.text = "Новая привычка"
+        label.text = "NewHabit".localized()
         return label
     }
     
@@ -259,7 +259,7 @@ extension CreateTrackerViewController {
         field.rightViewMode = .whileEditing
         field.textColor = .ypBlack
         field.font = .systemFont(ofSize: 17, weight: .regular)
-        field.placeholder = "Введите название трекера"
+        field.placeholder = "EnterTrackerName".localized()
         field.delegate = self
         return field
     }
@@ -325,7 +325,7 @@ extension CreateTrackerViewController {
         btn.layer.borderColor = UIColor.ypRed.cgColor
         btn.layer.cornerRadius = 16
         btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        btn.setTitle("Отменить", for: .normal)
+        btn.setTitle("Cancel".localized(), for: .normal)
         btn.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
         return btn
     }
@@ -338,7 +338,7 @@ extension CreateTrackerViewController {
         btn.layer.cornerRadius = 16
         btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         btn.isEnabled = false
-        btn.setTitle("Создать", for: .normal)
+        btn.setTitle("Create".localized(), for: .normal)
         btn.addTarget(self, action: #selector(createAction), for: .touchUpInside)
         btn.isEnabled = false
         return btn
@@ -375,14 +375,7 @@ extension CreateTrackerViewController: UITableViewDataSource {
         guard let cell else {
             return UITableViewCell()
         }
-        switch indexPath.row {
-        case 0:
-            cell.titleText = "Категория"
-        case 1:
-            cell.titleText = "Расписание"
-        default:
-            break
-        }
+        cell.titleText = options[indexPath.row].title
         return cell
     }
     

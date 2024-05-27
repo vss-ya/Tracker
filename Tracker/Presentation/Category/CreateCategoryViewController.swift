@@ -113,7 +113,7 @@ extension CreateCategoryViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .ypBlack
-        label.text = "Новая категория"
+        label.text = "NewCategory".localized()
         return label
     }
     
@@ -131,7 +131,7 @@ extension CreateCategoryViewController {
         field.rightViewMode = .whileEditing
         field.textColor = .ypBlack
         field.font = .systemFont(ofSize: 17, weight: .regular)
-        field.placeholder = "Введите название категории"
+        field.placeholder = "EnterCategoryName".localized()
         field.delegate = self
         return field
     }
@@ -154,7 +154,7 @@ extension CreateCategoryViewController {
         btn.layer.cornerRadius = 16
         btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         btn.isEnabled = false
-        btn.setTitle("Готово", for: .normal)
+        btn.setTitle("Done".localized(), for: .normal)
         btn.addTarget(self, action: #selector(createAction), for: .touchUpInside)
         btn.isEnabled = false
         return btn

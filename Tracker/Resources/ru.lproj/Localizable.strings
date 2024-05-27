@@ -1,0 +1,30 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by vs on 28.05.2024.
+  
+*/
+
+"Category" = "Категория";
+"Schedule" = "Расписание";
+"OnboardingFinishButtonTitle" = "Вот это технологии!";
+"CreateTracker" = "Создание трекера";
+"Habit" = "Привычка";
+"IrregularEvent" = "Нерегулярное событие";
+"EveryDay" = "Каждый день";
+"NewHabit" = "Новая привычка";
+"EnterTrackerName" = "Введите название трекера";
+"Cancel" = "Отменить";
+"Create" = "Создать";
+"Trackers" = "Трекеры";
+"Поиск" = "Search";
+"WhatToTrackQuestion" = "Что будем отслеживать?";
+"NothingFound" = "Ничего не найдено";
+"Done" = "Готово";
+"CategoryEmptyText" = "Привычки и события можно\nобъединить по смыслу";
+"AddCategory" = "Добавить категорию";
+"NewCategory" = "Новая категория";
+"EnterCategoryName" = "Введите название категории";
+"Trackers" = "Трекеры";
+"Stats" = "Статистика";

@@ -24,7 +24,7 @@ final class OnboardingViewController: UIPageViewController {
         button.layer.cornerRadius = 16
         button.setTitleColor(.ypWhite, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        button.setTitle("Вот это технологии!", for: .normal)
+        button.setTitle("OnboardingFinishButtonTitle".localized(), for: .normal)
         button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         return button
     }()

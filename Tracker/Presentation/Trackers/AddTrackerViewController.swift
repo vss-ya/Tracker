@@ -51,16 +51,16 @@ final class AddTrackerViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .ypBlack
-        label.text = "Создание трекера"
+        label.text = "CreateTracker".localized()
         return label
     }
     
     private func createHabitButton() -> UIButton {
-        return createButton(title: "Привычка", action: #selector(habitAction))
+        return createButton(title: "Habit".localized(), action: #selector(habitAction))
     }
     
     private func createIrregularEventButton() -> UIButton {
-        return createButton(title: "Нерегулярное событие", action: #selector(irregularEventAction))
+        return createButton(title: "IrregularEvent".localized(), action: #selector(irregularEventAction))
     }
     
     private func createButton(title: String, action: Selector) -> UIButton {

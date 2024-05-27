@@ -144,7 +144,7 @@ extension TrackersViewController {
         navigationItem.searchController = searchController
         navigationItem.searchController?.hidesNavigationBarDuringPresentation = false
         navigationController?.navigationBar.prefersLargeTitles = true
-        title = "Трекеры"
+        title = "Trackers".localized()
     }
     
     private func loadData() {
@@ -300,7 +300,7 @@ extension TrackersViewController {
     private func createSearchField() -> UISearchTextField {
         let searchField = UISearchTextField()
         searchField.translatesAutoresizingMaskIntoConstraints = false
-        searchField.placeholder = "Поиск"
+        searchField.placeholder = "Поиск".localized()
         searchField.delegate = self
         return searchField
     }
@@ -317,7 +317,7 @@ extension TrackersViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .ypBlack
         label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.text = "Что будем отслеживать?"
+        label.text = "WhatToTrackQuestion".localized()
         return label
     }
     
@@ -333,7 +333,7 @@ extension TrackersViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .ypBlack
         label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.text = "Ничего не найдено"
+        label.text = "NothingFound".localized()
         return label
     }
     
