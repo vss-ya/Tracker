@@ -86,20 +86,7 @@ extension TrackerCollectionViewCell {
     }
     
     private func formatDays(_ completedDays: Int) -> String {
-        let lastDigit = completedDays % 10
-        let lastTwoDigits = completedDays % 100
-        if lastTwoDigits >= 11 && lastTwoDigits <= 19 {
-            return "\(completedDays) дней"
-        }
-        
-        switch lastDigit {
-        case 1:
-            return "\(completedDays) день"
-        case 2, 3, 4:
-            return "\(completedDays) дня"
-        default:
-            return "\(completedDays) дней"
-        }
+        return "numberOfDays".localized(arguments: completedDays)
     }
     
 }
