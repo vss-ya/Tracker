@@ -75,7 +75,7 @@ final class TrackerRecordStore: NSObject {
     
     private func fetch(for obj: TrackerRecord) -> TrackerRecordCoreData? {
         let fetchRequest = TrackerRecordCoreData.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %@", obj.id as CVarArg)
+        fetchRequest.predicate = NSPredicate(format: "id == %@ AND date == %@", obj.id as CVarArg, obj.date as CVarArg)
         let result = try? context.fetch(fetchRequest)
         return result?.first
     }
