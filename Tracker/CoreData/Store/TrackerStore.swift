@@ -30,8 +30,6 @@ final class TrackerStore: NSObject {
         return controller
     }()
     private var fetchedObjects: [TrackerCoreData] { fetchedResultsController.fetchedObjects ?? [] }
-    private let trackerRecordStore = { TrackerRecordStore() }()
-    private let trackerCategoryStore = { TrackerCategoryStore() }()
     
     var trackers: [Tracker] { fetchTrackers() }
     weak var delegate: TrackerStoreDelegate?
@@ -56,22 +54,20 @@ final class TrackerStore: NSObject {
         try? context.save()
     }
     
-    func pin(_ obj: Tracker, _ pinned: Bool) {
-        guard let coreData = fetchedObjects.first(where: { $0.id == obj.id }) else {
+    func pin(id: UUID, _ pinned: Bool) {
+        guard let coreData = fetchedObjects.first(where: { $0.id == id }) else {
             return
         }
         coreData.pinned = pinned
         try? context.save()
     }
     
-    func delete(_ obj: Tracker) {
-        guard let coreData = fetchedObjects.first(where: { $0.id == obj.id }) else {
+    func delete(id: UUID) {
+        guard let coreData = fetchedObjects.first(where: { $0.id == id }) else {
             return
         }
         context.delete(coreData)
         try? context.save()
-        trackerRecordStore.deleteBy(id: obj.id)
-        trackerCategoryStore.removeFromCategory(tracker: obj.id)
     }
     
     private func fetchTrackers() -> [Tracker] {

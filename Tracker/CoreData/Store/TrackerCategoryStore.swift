@@ -69,7 +69,7 @@ final class TrackerCategoryStore: NSObject {
         try? context.save()
     }
     
-    func removeFromCategory(tracker: UUID) {
+    func delete(tracker: UUID) {
         let coreData = fetchedObjects.first(where: {
             ($0.trackers ?? []).contains(where: { $0 == tracker })
         })

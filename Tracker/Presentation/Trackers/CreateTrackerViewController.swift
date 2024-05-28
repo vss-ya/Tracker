@@ -11,6 +11,7 @@ final class CreateTrackerViewController: UIViewController {
     
     private lazy var scrollView: UIScrollView = { createScrollView() }()
     private lazy var headerLabel: UILabel = { createHeaderLabel() }()
+    private lazy var completedDaysLabel: UILabel = { createCompletedDaysLabel() }()
     private lazy var nameTextField: UITextField = { createNameTextField() }()
     private lazy var nameClearButton: UIButton = { createNameClearButton() }()
     private lazy var tableView: UITableView = { createTableView() }()
@@ -24,29 +25,45 @@ final class CreateTrackerViewController: UIViewController {
     
     private var name: String { (nameTextField.text ?? "").trimmed() }
     private var options: [TrackerOption] = []
+    private var tracker: Tracker?
     private var category: TrackerCategory?
     private var schedule: [WeekDay] = []
     private var emoji: String?
     private var color: UIColor?
+    private var completedDays: Int = 0
     
     private var optionCellHeight: CGFloat = 75
     private var tableViewHeightConstraint: NSLayoutConstraint = NSLayoutConstraint()
     
-    private var trackerKind: TrackerKind = .habit { didSet { trackerKindDidiChange() } }
+    private var trackerKind: TrackerKind = .habit { didSet { trackerKindDidChange() } }
     private var onCreateCallback: ((Tracker, TrackerCategory)->(Void))?
     
     convenience init(_ trackerKind: TrackerKind, onCreate: ((Tracker, TrackerCategory) -> Void)? = nil) {
         self.init()
         self.trackerKind = trackerKind
         self.onCreateCallback = onCreate
-        self.trackerKindDidiChange()
+        self.trackerKindDidChange()
+    }
+    
+    convenience init(tracker: Tracker, category: TrackerCategory, completedDays: Int, onSave: ((Tracker, TrackerCategory) -> Void)? = nil) {
+        self.init()
+        self.tracker = tracker
+        self.category = category
+        self.schedule = tracker.schedule ?? []
+        self.emoji = tracker.emoji
+        self.color = tracker.color
+        self.completedDays = completedDays
+        self.trackerKind = .habit
+        self.onCreateCallback = onSave
+        self.trackerKindDidChange()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setup()
-        trackerKindDidiChange()
+        trackerKindDidChange()
+        updateViews()
     }
     
 }
@@ -71,12 +88,12 @@ extension CreateTrackerViewController {
         {
             return
         }
-        let tracker = Tracker(id: UUID(),
+        let tracker = Tracker(id: tracker?.id ?? UUID(),
                               title: name,
                               color: color,
                               emoji: emoji,
                               schedule: schedule,
-                              pinned: false)
+                              pinned: tracker?.pinned ?? false)
         onCreateCallback?(tracker, category)
     }
     
@@ -95,6 +112,7 @@ extension CreateTrackerViewController {
         
         view.addSubview(scrollView)
         scrollView.addSubview(headerLabel)
+        scrollView.addSubview(completedDaysLabel)
         scrollView.addSubview(nameTextField)
         scrollView.addSubview(tableView)
         scrollView.addSubview(emojiCollectionView)
@@ -102,6 +120,7 @@ extension CreateTrackerViewController {
         scrollView.addSubview(createButton)
         scrollView.addSubview(cancelButton)
         
+        nameTextField.text = tracker?.title
         nameTextField.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 29, height: 17))
         nameTextField.rightView?.addSubview(nameClearButton)
     }
@@ -120,7 +139,6 @@ extension CreateTrackerViewController {
             headerLabel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 26),
             headerLabel.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             headerLabel.heightAnchor.constraint(equalToConstant: 22),
-            nameTextField.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 38),
             nameTextField.centerXAnchor.constraint(equalTo: headerLabel.centerXAnchor),
             nameTextField.heightAnchor.constraint(equalToConstant: 75),
             nameTextField.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
@@ -148,13 +166,30 @@ extension CreateTrackerViewController {
             createButton.leadingAnchor.constraint(equalTo: colorCollectionView.centerXAnchor, constant: 4)
         ])
         
+        if tracker == nil {
+            completedDaysLabel.removeFromSuperview()
+            NSLayoutConstraint.activate([
+                nameTextField.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 38),
+            ])
+        } else {
+            headerLabel.text = "EditHabit".localized()
+            completedDaysLabel.text = "numberOfDays".localized(arguments: completedDays)
+            createButton.setTitle("Save".localized(), for: .normal)
+            NSLayoutConstraint.activate([
+                completedDaysLabel.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 38),
+                completedDaysLabel.centerXAnchor.constraint(equalTo: headerLabel.centerXAnchor),
+                completedDaysLabel.heightAnchor.constraint(equalToConstant: 38),
+                nameTextField.topAnchor.constraint(equalTo: completedDaysLabel.bottomAnchor, constant: 40),
+            ])
+        }
+        
         emojiCollectionView.layoutIfNeeded()
         emojiCollectionHeightConstraint.constant = emojiCollectionView.contentSize.height
         colorCollectionView.layoutIfNeeded()
         colorCollectionHeightConstraint.constant = colorCollectionView.contentSize.height
     }
     
-    private func trackerKindDidiChange() {
+    private func trackerKindDidChange() {
         options = switch trackerKind {
         case .habit: 
             [.category, .schedule]
@@ -163,7 +198,7 @@ extension CreateTrackerViewController {
         }
         schedule = switch trackerKind {
         case .habit:
-            []
+            tracker?.schedule ?? []
         default:
             WeekDay.allCases
         }
@@ -203,26 +238,39 @@ extension CreateTrackerViewController {
         let text = name
         let flags = [!text.isEmpty, category != nil, !schedule.isEmpty, emoji != nil, color != nil]
         let isEnabled = flags.filter({ !$0 }).isEmpty
-        let categoryCell = tableView.cellForRow(at: .init(row: 0, section: 0))
-        let scheduleCell = tableView.cellForRow(at: .init(row: 1, section: 0))
+        let emojiIndex = emojis.firstIndex(of: emoji ?? "")
+        let colorIndex = colors.map({ $0.toHexString() }).firstIndex(of: color?.toHexString() ?? "")
+        nameClearButton.isHidden = text.isEmpty
+        createButton.isEnabled = isEnabled
+        createButton.backgroundColor = isEnabled ? .ypBlack :. ypGray
         
-        if case let cell as TrackerOptionTableViewCell = categoryCell {
+        emojiCollectionView.selectItem(at: .init(row: emojiIndex ?? -1, section: 0),
+                                       animated: false,
+                                       scrollPosition: .centeredVertically)
+        colorCollectionView.selectItem(at: .init(row: colorIndex ?? -1, section: 0),
+                                       animated: false,
+                                       scrollPosition: .centeredVertically)
+        
+        tableView.reloadData()
+    }
+    
+    private func configure(cell: TrackerOptionTableViewCell, at indexPath: IndexPath) {
+        switch indexPath.row {
+        case 0:
+            cell.titleText = options[indexPath.row].title
             cell.descriptionText = category?.header
-        }
-        
-        if case let cell as TrackerOptionTableViewCell = scheduleCell {
+        case 1:
             let description = switch schedule.count {
             case WeekDay.allCases.count:
                 "EveryDay".localized()
             default:
                 schedule.map({ $0.shortName }).joined(separator: ", ")
             }
+            cell.titleText = options[indexPath.row].title
             cell.descriptionText = description
+        default:
+            break
         }
-        
-        nameClearButton.isHidden = text.isEmpty
-        createButton.isEnabled = isEnabled
-        createButton.backgroundColor = isEnabled ? .ypBlack :. ypGray
     }
     
 }
@@ -243,6 +291,14 @@ extension CreateTrackerViewController {
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .ypBlack
         label.text = "NewHabit".localized()
+        return label
+    }
+    
+    private func createCompletedDaysLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 32, weight: .bold)
+        label.textColor = .ypBlack
         return label
     }
     
@@ -376,7 +432,7 @@ extension CreateTrackerViewController: UITableViewDataSource {
         guard let cell else {
             return UITableViewCell()
         }
-        cell.titleText = options[indexPath.row].title
+        configure(cell: cell, at: indexPath)
         return cell
     }
     

@@ -241,6 +241,25 @@ extension TrackersViewController {
         filterTrackers()
     }
     
+    private func pin(tracker: Tracker, _ pinned: Bool) {
+        trackerStore.pin(id: tracker.id, pinned)
+    }
+    
+    private func update(tracker: Tracker, category: TrackerCategory) {
+        trackerStore.delete(id: tracker.id)
+        trackerCategoryStore.delete(tracker: tracker.id)
+        trackerStore.save(tracker)
+        trackerCategoryStore.addToCategory(withHeader: category.header, tracker: tracker)
+        filterTrackers()
+    }
+    
+    private func delete(tracker: Tracker) {
+        trackerStore.delete(id: tracker.id)
+        trackerRecordStore.delete(id: tracker.id)
+        trackerCategoryStore.delete(tracker: tracker.id)
+        filterTrackers()
+    }
+    
     private func isTrackerCompleted(id: UUID) -> Bool {
         return completedTrackers.contains {
             $0.id == id && calendar.isDate($0.date, inSameDayAs: datePicker.date)
@@ -272,21 +291,23 @@ extension TrackersViewController {
         trackerRecordStore.delete(trackerRecord)
     }
     
-    private func menuActions(for tracker: Tracker) -> [UIAction] {
+    private func menuActions(for indexPath: IndexPath) -> [UIAction] {
+        let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
         let pinAction = switch tracker.pinned {
         case true:
             UIAction(title: "Unpin".localized()) { [weak self] _ in
                 guard let self else { return }
-                trackerStore.pin(tracker, false)
+                pin(tracker: tracker, false)
             }
         case false:
             UIAction(title: "Pin".localized()) { [weak self] _ in
                 guard let self else { return }
-                trackerStore.pin(tracker, true)
+                pin(tracker: tracker, true)
             }
         }
         let editAction = UIAction(title: "Edit".localized()) { [weak self] _ in
             guard let self else { return }
+            performEditAction(for: tracker)
         }
         let deleteAction = UIAction(title: "Delete".localized()) { [weak self] _ in
             guard let self else { return }
@@ -301,7 +322,7 @@ extension TrackersViewController {
                                    preferredStyle: .actionSheet)
         let deleteAction = UIAlertAction(title: "Delete".localized(), style: .destructive) { [weak self] _ in
             guard let self else { return }
-            trackerStore.delete(tracker)
+            delete(tracker: tracker)
         }
         let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil)
         
@@ -309,6 +330,34 @@ extension TrackersViewController {
         ac.addAction(cancelAction)
         
         present(ac, animated: true, completion: nil)
+    }
+    
+    func performEditAction(for tracker: Tracker) {
+        let category = categories.first {
+            $0.trackers.contains {
+                $0.id == tracker.id
+            }
+        }
+        let completedDays = completedTrackers.filter {
+            $0.id == tracker.id
+        }.count
+        
+        guard let category else {
+            return
+        }
+        
+        let vc = CreateTrackerViewController(
+            tracker: tracker,
+            category: category,
+            completedDays: completedDays)
+        { [weak self] in
+            guard let self else {
+                return
+            }
+            update(tracker: $0, category: $1)
+            dismiss(animated: true, completion: nil)
+        }
+        present(vc, animated: true)
     }
     
 }
@@ -499,7 +548,6 @@ extension TrackersViewController: UICollectionViewDataSource {
 extension TrackersViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let tracker = self.visibleCategories[indexPath.section].trackers[indexPath.row]
         let configuration = UIContextMenuConfiguration(
             identifier: nil,
             previewProvider: { [weak self] () -> UIViewController? in
@@ -508,7 +556,7 @@ extension TrackersViewController: UICollectionViewDelegate {
                 return self.previewForCell(at: indexPath)
             },
             actionProvider: { [weak self] _ in
-                let actions = self?.menuActions(for: tracker) ?? []
+                let actions = self?.menuActions(for: indexPath) ?? []
                 return UIMenu(title: "", children: actions)
             }
         )

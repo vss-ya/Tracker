@@ -65,7 +65,7 @@ final class TrackerRecordStore: NSObject {
         try? context.save()
     }
     
-    func deleteBy(id: UUID) {
+    func delete(id: UUID) {
         fetchedObjects.filter({
             $0.id == id
         }).forEach({
