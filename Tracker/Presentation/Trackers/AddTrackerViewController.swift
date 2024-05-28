@@ -22,7 +22,7 @@ final class AddTrackerViewController: UIViewController {
     }
     
     private func setup() {
-        view.backgroundColor = .white
+        view.backgroundColor = .ypWhite
         
         view.addSubview(headerLabel)
         view.addSubview(habitButton)

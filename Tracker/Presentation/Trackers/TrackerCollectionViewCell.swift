@@ -161,7 +161,7 @@ extension TrackerCollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.textColor = .ypWhite
+        label.textColor = .ypAnyWhite
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
         label.preferredMaxLayoutWidth = 143

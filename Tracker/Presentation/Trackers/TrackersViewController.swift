@@ -139,7 +139,7 @@ extension TrackersViewController {
     }
     
     private func setupViews() {
-        view.backgroundColor = .white
+        view.backgroundColor = .ypWhite
         
         view.addSubview(emptyTrackersImageView)
         view.addSubview(emptyTrackersLabel)
@@ -365,7 +365,7 @@ extension TrackersViewController {
             guard let self else { return }
             performEditAction(for: tracker)
         }
-        let deleteAction = UIAction(title: "Delete".localized()) { [weak self] _ in
+        let deleteAction = UIAction(title: "Delete".localized(), attributes: .destructive) { [weak self] _ in
             guard let self else { return }
             performDeleteAction(for: tracker)
         }
@@ -492,6 +492,7 @@ extension TrackersViewController {
     private func createCollectionView() -> UICollectionView {
         let view = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .ypWhite
         view.allowsMultipleSelection = false
         view.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 60, right: 16)
         view.dataSource = self
