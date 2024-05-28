@@ -36,3 +36,8 @@
 "DeleteTrackerQuestion" = "Уверены что хотите удалить трекер?";
 "EditHabit" = "Редактирование привычки";
 "Save" = "Сохранить";
+"AllTrackers" = "Все трекеры";
+"TodayTrackers" = "Трекеры на сегодня";
+"CompletedTrackers" = "Завершенные";
+"NotCompletedTrackers" = "Не завершенные";
+"Filters" = "Фильтры";

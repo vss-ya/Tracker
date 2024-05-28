@@ -16,6 +16,7 @@ final class TrackersViewController: UIViewController {
     private lazy var emptySearchImageView: UIImageView = { createEmptySearchImageView() }()
     private lazy var emptySearchLabel: UILabel = { createEmptySearchLabel() }()
     private lazy var collectionView: UICollectionView = { createCollectionView() }()
+    private lazy var filterButton: UIButton = { createFilterButton() }()
     
     private let trackerStore = TrackerStore()
     private let trackerCategoryStore = TrackerCategoryStore()
@@ -32,6 +33,11 @@ final class TrackersViewController: UIViewController {
     }
     private var searchText: String {
         navigationItem.searchController?.searchBar.text ?? ""
+    }
+    
+    private var selectedFilter: Filter {
+        get { UserSettingsStorage.shared.filter }
+        set { UserSettingsStorage.shared.filter = newValue }
     }
     
     override func viewDidLoad() {
@@ -59,6 +65,32 @@ extension TrackersViewController {
     
     @objc private func datePickerValueChangedAction() {
         filterTrackers()
+    }
+    
+    @objc private func filterAction() {
+        let vc = TrackersFilterViewController(
+            selectedFilter: selectedFilter) 
+        { [weak self] filter in
+            guard let self else { return }
+            
+            defer {
+                dismiss(animated: true, completion: nil)
+            }
+            
+            selectedFilter = filter
+            
+            switch filter {
+            case .todayTrackers:
+                selectedFilter = .allTrackers
+                datePicker.date = Date()
+                return
+            default:
+                break
+            }
+            
+            filterTrackers()
+        }
+        present(vc, animated: true)
     }
     
 }
@@ -114,6 +146,7 @@ extension TrackersViewController {
         view.addSubview(emptySearchImageView)
         view.addSubview(emptySearchLabel)
         view.addSubview(collectionView)
+        view.addSubview(filterButton)
         
         prepareNavigationBar()
     }
@@ -132,7 +165,11 @@ extension TrackersViewController {
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0)
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+            filterButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 130),
+            filterButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -130),
+            filterButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
+            filterButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -181,6 +218,12 @@ extension TrackersViewController {
         } else {
             showSearchScreen()
         }
+        filterButton.backgroundColor = switch selectedFilter {
+        case .completedTrackers, .notCompletedTrackers:
+                .ypRed
+        default:
+                .ypBlue
+        }
     }
     
     private func configure(_ cell: TrackerCollectionViewCell, at indexPath: IndexPath) {
@@ -216,11 +259,24 @@ extension TrackersViewController {
                     return day.rawValue == selectedWeekday
                 } ?? false
                 let titleContains = tracker.title.contains(searchText) || searchText.isEmpty
+                
                 if index == 0 {
                     return scheduleContains && titleContains
                 }
+                
                 let pinnedContains = pinnedTrackers.contains{ $0.id == tracker.id }
-                return scheduleContains && titleContains && !pinnedContains
+                var include = scheduleContains && titleContains && !pinnedContains
+                
+                switch selectedFilter {
+                case .completedTrackers:
+                    include = include && isTrackerCompleted(id: tracker.id)
+                case .notCompletedTrackers:
+                    include = include && !isTrackerCompleted(id: tracker.id)
+                default:
+                    break
+                }
+                
+                return include
             }
             return TrackerCategory(header: category.header, trackers: trackers)
         }
@@ -437,7 +493,7 @@ extension TrackersViewController {
         let view = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         view.translatesAutoresizingMaskIntoConstraints = false
         view.allowsMultipleSelection = false
-        view.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        view.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 60, right: 16)
         view.dataSource = self
         view.delegate = self
         view.register(TrackerCollectionViewCell.self, 
@@ -448,7 +504,17 @@ extension TrackersViewController {
         return view
     }
     
-    private func previewForCell( at indexPath: IndexPath) -> UIViewController? {
+    private func createFilterButton() -> UIButton {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.layer.cornerRadius = 16
+        btn.backgroundColor = .ypBlue
+        btn.setTitle("Filters".localized(), for: .normal)
+        btn.addTarget(self, action: #selector(filterAction), for: .touchUpInside)
+        return btn
+    }
+    
+    private func previewForCell(at indexPath: IndexPath) -> UIViewController? {
         guard let cell = collectionView.cellForItem(at: indexPath) else {
             return nil
         }
