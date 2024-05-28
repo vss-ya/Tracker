@@ -130,8 +130,8 @@ extension TrackersViewController {
             emptySearchLabel.topAnchor.constraint(equalTo: emptySearchImageView.bottomAnchor, constant: 8),
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0)
         ])
     }
     
@@ -264,6 +264,26 @@ extension TrackersViewController {
         trackerRecordStore.delete(trackerRecord)
     }
     
+    private func menuActions(for tracker: Tracker) -> [UIAction] {
+        let pinAction = switch tracker.pinned {
+        case true:
+            UIAction(title: "Unpin".localized()) { [weak self] _ in
+                guard let self else { return }
+            }
+        case false:
+            UIAction(title: "Pin".localized()) { [weak self] _ in
+                guard let self else { return }
+            }
+        }
+        let editAction = UIAction(title: "Edit".localized()) { [weak self] _ in
+            guard let self else { return }
+        }
+        let deleteAction = UIAction(title: "Delete".localized()) { [weak self] _ in
+            guard let self else { return }
+        }
+        return [pinAction, editAction, deleteAction]
+    }
+    
 }
 
 // MARK: - Factory
@@ -341,6 +361,7 @@ extension TrackersViewController {
         let view = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         view.translatesAutoresizingMaskIntoConstraints = false
         view.allowsMultipleSelection = false
+        view.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         view.dataSource = self
         view.delegate = self
         view.register(TrackerCollectionViewCell.self, 
@@ -349,6 +370,27 @@ extension TrackersViewController {
                       forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                       withReuseIdentifier: TrackerCollectionHeaderView.reuseIdentifier)
         return view
+    }
+    
+    private func previewForCell( at indexPath: IndexPath) -> UIViewController? {
+        guard let cell = collectionView.cellForItem(at: indexPath) else {
+            return nil
+        }
+        let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
+        let cellSize = cell.frame.size
+        let cellPreview = TrackerCollectionViewCell()
+        
+        cellPreview.configurePreview(tracker: tracker)
+        
+        let vc = UIViewController()
+        vc.view = cellPreview
+        vc.view.layer.cornerRadius = 0
+        vc.preferredContentSize = CGSize(
+            width: cellSize.width,
+            height: cellSize.width * 0.55
+        )
+        
+        return vc
     }
     
 }
@@ -426,11 +468,34 @@ extension TrackersViewController: UICollectionViewDataSource {
     
 }
 
+// MARK: - UICollectionViewDelegate
+extension TrackersViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let tracker = self.visibleCategories[indexPath.section].trackers[indexPath.row]
+        let configuration = UIContextMenuConfiguration(
+            identifier: nil,
+            previewProvider: { [weak self] () -> UIViewController? in
+                guard let self else { return nil }
+                
+                return self.previewForCell(at: indexPath)
+            },
+            actionProvider: { [weak self] _ in
+                let actions = self?.menuActions(for: tracker) ?? []
+                return UIMenu(title: "", children: actions)
+            }
+        )
+        return configuration
+    }
+    
+}
+
 // MARK: - UICollectionViewDelegateFlowLayout
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.bounds.width / 2 - 5
+        let inset = collectionView.contentInset.width
+        let width = (collectionView.bounds.width - inset) / 2 - 5
         return CGSize(width: width, height: width * 0.88)
     }
     

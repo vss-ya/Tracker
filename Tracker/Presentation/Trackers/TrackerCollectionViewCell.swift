@@ -52,8 +52,8 @@ extension TrackerCollectionViewCell {
 extension TrackerCollectionViewCell {
     
     func setup() {
-        contentView.layer.cornerRadius = 16
-        contentView.layer.masksToBounds = true
+        layer.cornerRadius = 16
+        layer.masksToBounds = true
         
         contentView.addSubview(cardView)
         contentView.addSubview(emojiBackgroundView)
@@ -63,6 +63,14 @@ extension TrackerCollectionViewCell {
         contentView.addSubview(completeButton)
         
         NSLayoutConstraint.activate([
+            cardView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            cardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            cardView.heightAnchor.constraint(equalTo: cardView.widthAnchor, multiplier: 0.55),
+            emojiBackgroundView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 12),
+            emojiBackgroundView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
+            emojiBackgroundView.widthAnchor.constraint(equalToConstant: 24),
+            emojiBackgroundView.heightAnchor.constraint(equalTo: emojiBackgroundView.widthAnchor),
             emojiLabel.centerXAnchor.constraint(equalTo: emojiBackgroundView.centerXAnchor),
             emojiLabel.centerYAnchor.constraint(equalTo: emojiBackgroundView.centerYAnchor),
             completedDaysLabel.topAnchor.constraint(equalTo: cardView.bottomAnchor, constant: 16),
@@ -74,10 +82,15 @@ extension TrackerCollectionViewCell {
         ])
     }
     
-    func configure(tracker: Tracker, completedDays: Int, isCompleted: Bool, onComplete: @escaping (() -> Void)) {
+    func configure(tracker: Tracker) {
         cardView.backgroundColor = tracker.color
         descriptionLabel.text = tracker.title
         emojiLabel.text = tracker.emoji
+    }
+    
+    func configure(tracker: Tracker, completedDays: Int, isCompleted: Bool, onComplete: @escaping (() -> Void)) {
+        configure(tracker: tracker)
+        
         completedDaysLabel.text = formatDays(completedDays)
         completeCallback = onComplete
         
@@ -85,8 +98,24 @@ extension TrackerCollectionViewCell {
         completeButton.setImage(image, for: .normal)
     }
     
+    func configurePreview(tracker: Tracker) {
+        configure(tracker: tracker)
+        
+        layer.cornerRadius = 0
+        cardView.layer.cornerRadius = 0
+        completedDaysLabel.isHidden = true
+        completeButton.isHidden = true
+    }
+    
     private func formatDays(_ completedDays: Int) -> String {
         return "numberOfDays".localized(arguments: completedDays)
+    }
+    
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        
+        let size = emojiBackgroundView.frame.size
+        emojiBackgroundView.layer.cornerRadius = size.width / 2
     }
     
 }
@@ -96,19 +125,15 @@ extension TrackerCollectionViewCell {
     
     private func createCardView() -> UIView {
         let view = UIView()
-        view.frame = CGRect(x: 0,
-                            y: 0,
-                            width: contentView.frame.width,
-                            height: contentView.frame.width * 0.55)
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 16
         return view
     }
     
     private func createEmojiBackgroundView() -> UIView {
         let view = UIView()
-        view.frame = CGRect(x: 12, y: 12, width: 24, height: 24)
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .ypWhite
-        view.layer.cornerRadius = view.frame.width / 2
         view.layer.opacity = 0.3
         return view
     }
@@ -116,7 +141,6 @@ extension TrackerCollectionViewCell {
     private func creatEmojiLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.frame = CGRect(x: 0, y: 0, width: 18, height: 18)
         label.font = .systemFont(ofSize: 14, weight: .medium)
         return label
     }
@@ -124,7 +148,6 @@ extension TrackerCollectionViewCell {
     private func createDescriptionLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.frame = CGRect(x: 120, y: 106, width: 143, height: 34)
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .ypWhite
         label.numberOfLines = 0
@@ -136,7 +159,6 @@ extension TrackerCollectionViewCell {
     private func createCompletedDaysLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.frame = CGRect(x: 120, y: 106, width: 101, height: 18)
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .ypBlack
         return label
@@ -145,7 +167,6 @@ extension TrackerCollectionViewCell {
     private func createCompleteButton() -> UIButton {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.frame = CGRect(x: 100, y: 100, width: 34, height: 34)
         button.addTarget(self, action: #selector(addAction), for: .touchUpInside)
         return button
     }

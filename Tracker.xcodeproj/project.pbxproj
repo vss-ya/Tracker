@@ -40,6 +40,7 @@
 		57E854F92C02FB2000615E9D /* UserSettingsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E854F82C02FB2000615E9D /* UserSettingsStorage.swift */; };
 		57E854FE2C04EA9000615E9D /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 57E854FC2C04EA9000615E9D /* Localizable.stringsdict */; };
 		57E855042C04FB7100615E9D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 57E855022C04FB7100615E9D /* Localizable.strings */; };
+		57E855082C0587BF00615E9D /* UIEdgeInsets+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57E855072C0587BF00615E9D /* UIEdgeInsets+Extension.swift */; };
 		57EC04B52BF36A7C00FAFFA9 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57EC04B42BF36A7C00FAFFA9 /* OnboardingViewController.swift */; };
 		57EC04BA2BF385DA00FAFFA9 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57EC04B92BF385D900FAFFA9 /* CategoryViewController.swift */; };
 		57EC04BC2BF3861000FAFFA9 /* CategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57EC04BB2BF3861000FAFFA9 /* CategoryTableViewCell.swift */; };
@@ -84,6 +85,7 @@
 		57E854FD2C04EA9000615E9D /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		57E855012C04EE0D00615E9D /* ru */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = ru; path = ru.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		57E855032C04FB7100615E9D /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		57E855072C0587BF00615E9D /* UIEdgeInsets+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIEdgeInsets+Extension.swift"; sourceTree = "<group>"; };
 		57EC04B42BF36A7C00FAFFA9 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		57EC04B92BF385D900FAFFA9 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		57EC04BB2BF3861000FAFFA9 /* CategoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewCell.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 			children = (
 				57493A4E2BD8ECCD00A5098E /* UIColor+Extension.swift */,
 				57EC04C12BF3A55700FAFFA9 /* String+Extension.swift */,
+				57E855072C0587BF00615E9D /* UIEdgeInsets+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -334,6 +337,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5715A6762BCD2DF2003FB557 /* TrackerCategory.swift in Sources */,
+				57E855082C0587BF00615E9D /* UIEdgeInsets+Extension.swift in Sources */,
 				5715A67A2BCD34D0003FB557 /* Constants.swift in Sources */,
 				57493A4F2BD8ECCD00A5098E /* UIColor+Extension.swift in Sources */,
 				57493A542BD8F33400A5098E /* TrackerCategoryStore.swift in Sources */,
