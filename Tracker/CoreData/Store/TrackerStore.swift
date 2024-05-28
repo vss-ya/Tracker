@@ -18,7 +18,7 @@ final class TrackerStore: NSObject {
     private lazy var fetchedResultsController = {
         let fetchRequest = TrackerCoreData.fetchRequest()
         fetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \TrackerCoreData.id, ascending: true)
+            NSSortDescriptor(keyPath: \TrackerCoreData.title, ascending: true)
         ]
         let controller = NSFetchedResultsController(
             fetchRequest: fetchRequest,
@@ -29,6 +29,9 @@ final class TrackerStore: NSObject {
         try? controller.performFetch()
         return controller
     }()
+    private var fetchedObjects: [TrackerCoreData] { fetchedResultsController.fetchedObjects ?? [] }
+    private let trackerRecordStore = { TrackerRecordStore() }()
+    private let trackerCategoryStore = { TrackerCategoryStore() }()
     
     var trackers: [Tracker] { fetchTrackers() }
     weak var delegate: TrackerStoreDelegate?
@@ -49,21 +52,30 @@ final class TrackerStore: NSObject {
     }
     
     func save(_ obj: Tracker) {
-        let coreData = trackerCoreData(from: obj)
+        let _ = trackerCoreData(from: obj)
         try? context.save()
     }
     
     func pin(_ obj: Tracker, _ pinned: Bool) {
-        let coreData = fetchedResultsController.fetchedObjects?.first(where: { $0.id == obj.id })
-        coreData?.pinned = pinned
+        guard let coreData = fetchedObjects.first(where: { $0.id == obj.id }) else {
+            return
+        }
+        coreData.pinned = pinned
         try? context.save()
     }
     
-    private func fetchTrackers() -> [Tracker] {
-        guard let objects = fetchedResultsController.fetchedObjects else {
-            return []
+    func delete(_ obj: Tracker) {
+        guard let coreData = fetchedObjects.first(where: { $0.id == obj.id }) else {
+            return
         }
-        let result = objects.compactMap({ tracker(from: $0) })
+        context.delete(coreData)
+        try? context.save()
+        trackerRecordStore.deleteBy(id: obj.id)
+        trackerCategoryStore.removeFromCategory(tracker: obj.id)
+    }
+    
+    private func fetchTrackers() -> [Tracker] {
+        let result = fetchedObjects.compactMap({ tracker(from: $0) })
         return result
     }
     

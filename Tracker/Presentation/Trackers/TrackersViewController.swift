@@ -290,8 +290,25 @@ extension TrackersViewController {
         }
         let deleteAction = UIAction(title: "Delete".localized()) { [weak self] _ in
             guard let self else { return }
+            performDeleteAction(for: tracker)
         }
         return [pinAction, editAction, deleteAction]
+    }
+    
+    private func performDeleteAction(for tracker: Tracker) {
+        let ac = UIAlertController(title: nil,
+                                   message: "DeleteTrackerQuestion".localized(),
+                                   preferredStyle: .actionSheet)
+        let deleteAction = UIAlertAction(title: "Delete".localized(), style: .destructive) { [weak self] _ in
+            guard let self else { return }
+            trackerStore.delete(tracker)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil)
+        
+        ac.addAction(deleteAction)
+        ac.addAction(cancelAction)
+        
+        present(ac, animated: true, completion: nil)
     }
     
 }

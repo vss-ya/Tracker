@@ -29,6 +29,7 @@ final class TrackerRecordStore: NSObject {
         try? controller.performFetch()
         return controller
     }()
+    private var fetchedObjects: [TrackerRecordCoreData] { fetchedResultsController.fetchedObjects ?? [] }
     
     var trackerRecords: [TrackerRecord] { fetchTrackerRecords() }
     weak var delegate: TrackerRecordStoreDelegate?
@@ -56,10 +57,20 @@ final class TrackerRecordStore: NSObject {
     }
     
     func delete(_ obj: TrackerRecord) {
-        guard let coreData = fetch(for: obj) else {
-            return
-        }
-        context.delete(coreData)
+        fetchedObjects.filter({
+            $0.id == obj.id && $0.date == obj.date
+        }).forEach({
+            context.delete($0)
+        })
+        try? context.save()
+    }
+    
+    func deleteBy(id: UUID) {
+        fetchedObjects.filter({
+            $0.id == id
+        }).forEach({
+            context.delete($0)
+        })
         try? context.save()
     }
     
@@ -73,18 +84,8 @@ final class TrackerRecordStore: NSObject {
         return TrackerRecord(id: id, date: date)
     }
     
-    private func fetch(for obj: TrackerRecord) -> TrackerRecordCoreData? {
-        let fetchRequest = TrackerRecordCoreData.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %@ AND date == %@", obj.id as CVarArg, obj.date as CVarArg)
-        let result = try? context.fetch(fetchRequest)
-        return result?.first
-    }
-    
     private func fetchTrackerRecords() -> [TrackerRecord] {
-        guard let objects = fetchedResultsController.fetchedObjects else {
-            return []
-        }
-        let result = objects.compactMap({ trackerRecord(from: $0) })
+        let result = fetchedObjects.compactMap({ trackerRecord(from: $0) })
         return result
     }
     
