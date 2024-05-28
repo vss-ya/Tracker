@@ -68,7 +68,8 @@ extension TrackersViewController: TrackerStoreDelegate {
     
     func storeDidChange(_ store: TrackerStore) {
         trackers = store.trackers
-        collectionView.reloadData()
+        categories = trackerCategoryStore.trackerCategories
+        filterTrackers()
     }
     
 }
@@ -78,7 +79,7 @@ extension TrackersViewController: TrackerCategoryStoreDelegate {
     
     func storeDidChange(_ store: TrackerCategoryStore) {
         categories = store.trackerCategories
-        collectionView.reloadData()
+        filterTrackers()
     }
     
 }
@@ -88,7 +89,7 @@ extension TrackersViewController: TrackerRecordStoreDelegate {
     
     func storeDidChange(_ store: TrackerRecordStore) {
         completedTrackers = store.trackerRecords
-        collectionView.reloadData()
+        filterTrackers()
     }
     
 }
@@ -206,15 +207,22 @@ extension TrackersViewController {
     }
     
     private func filterVisibleCategories() {
-        visibleCategories = categories.map {
-            let trackers = $0.trackers.filter { tracker in
+        let pinnedTrackers = trackers.filter { $0.pinned }
+        let pinnedCategory = TrackerCategory(header: "Pinned".localized(),
+                                             trackers: pinnedTrackers)
+        visibleCategories = ([pinnedCategory] + categories).enumerated().map { (index, category) in
+            let trackers = category.trackers.filter { tracker in
                 let scheduleContains = tracker.schedule?.contains { day in
                     return day.rawValue == selectedWeekday
                 } ?? false
                 let titleContains = tracker.title.contains(searchText) || searchText.isEmpty
-                return scheduleContains && titleContains
+                if index == 0 {
+                    return scheduleContains && titleContains
+                }
+                let pinnedContains = pinnedTrackers.contains{ $0.id == tracker.id }
+                return scheduleContains && titleContains && !pinnedContains
             }
-            return TrackerCategory(header: $0.header, trackers: trackers)
+            return TrackerCategory(header: category.header, trackers: trackers)
         }
         .filter {
             !$0.trackers.isEmpty
@@ -269,10 +277,12 @@ extension TrackersViewController {
         case true:
             UIAction(title: "Unpin".localized()) { [weak self] _ in
                 guard let self else { return }
+                trackerStore.pin(tracker, false)
             }
         case false:
             UIAction(title: "Pin".localized()) { [weak self] _ in
                 guard let self else { return }
+                trackerStore.pin(tracker, true)
             }
         }
         let editAction = UIAction(title: "Edit".localized()) { [weak self] _ in

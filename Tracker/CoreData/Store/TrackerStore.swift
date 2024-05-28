@@ -49,15 +49,22 @@ final class TrackerStore: NSObject {
     }
     
     func save(_ obj: Tracker) {
-        let coreData = TrackerCoreData(context: context)
-        coreData.id = obj.id
-        coreData.title = obj.title
-        coreData.color = obj.color.toHexString()
-        coreData.emoji = obj.emoji
-        coreData.schedule = obj.schedule?.map {
-            $0.rawValue
-        }
+        let coreData = trackerCoreData(from: obj)
         try? context.save()
+    }
+    
+    func pin(_ obj: Tracker, _ pinned: Bool) {
+        let coreData = fetchedResultsController.fetchedObjects?.first(where: { $0.id == obj.id })
+        coreData?.pinned = pinned
+        try? context.save()
+    }
+    
+    private func fetchTrackers() -> [Tracker] {
+        guard let objects = fetchedResultsController.fetchedObjects else {
+            return []
+        }
+        let result = objects.compactMap({ tracker(from: $0) })
+        return result
     }
     
     private func tracker(from coreData: TrackerCoreData) -> Tracker? {
@@ -69,19 +76,26 @@ final class TrackerStore: NSObject {
         else {
             return nil
         }
+        let pinned = coreData.pinned
         return Tracker(id: id,
                        title: title,
                        color: UIColor(hex: color),
                        emoji: emoji,
-                       schedule: schedule.compactMap({ WeekDay(rawValue: $0)}))
+                       schedule: schedule.compactMap({ WeekDay(rawValue: $0)}),
+                       pinned: pinned)
     }
     
-    private func fetchTrackers() -> [Tracker] {
-        guard let objects = fetchedResultsController.fetchedObjects else {
-            return []
+    private func trackerCoreData(from obj: Tracker) -> TrackerCoreData {
+        let coreData = TrackerCoreData(context: context)
+        coreData.id = obj.id
+        coreData.title = obj.title
+        coreData.color = obj.color.toHexString()
+        coreData.emoji = obj.emoji
+        coreData.schedule = obj.schedule?.map {
+            $0.rawValue
         }
-        let result = objects.compactMap({ tracker(from: $0) })
-        return result
+        coreData.pinned = obj.pinned
+        return coreData
     }
     
 }

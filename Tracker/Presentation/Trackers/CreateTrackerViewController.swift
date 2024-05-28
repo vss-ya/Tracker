@@ -75,7 +75,8 @@ extension CreateTrackerViewController {
                               title: name,
                               color: color,
                               emoji: emoji,
-                              schedule: schedule)
+                              schedule: schedule,
+                              pinned: false)
         onCreateCallback?(tracker, category)
     }
     

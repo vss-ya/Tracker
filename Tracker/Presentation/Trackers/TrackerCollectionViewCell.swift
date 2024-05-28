@@ -14,6 +14,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     private lazy var cardView: UIView = { createCardView() }()
     private lazy var emojiBackgroundView: UIView = { createEmojiBackgroundView() }()
     private lazy var emojiLabel: UILabel = { creatEmojiLabel() }()
+    private lazy var pinImageView: UIImageView = { createPinImageView() }()
     private lazy var descriptionLabel: UILabel = { createDescriptionLabel() }()
     private lazy var completedDaysLabel: UILabel = { createCompletedDaysLabel() }()
     private lazy var completeButton: UIButton = { createCompleteButton() }()
@@ -37,6 +38,13 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         setup()
     }
     
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        
+        let size = emojiBackgroundView.frame.size
+        emojiBackgroundView.layer.cornerRadius = size.width / 2
+    }
+    
 }
 
 // MARK: - Actions
@@ -51,41 +59,11 @@ extension TrackerCollectionViewCell {
 // MARK: - Helpers
 extension TrackerCollectionViewCell {
     
-    func setup() {
-        layer.cornerRadius = 16
-        layer.masksToBounds = true
-        
-        contentView.addSubview(cardView)
-        contentView.addSubview(emojiBackgroundView)
-        contentView.addSubview(emojiLabel)
-        contentView.addSubview(descriptionLabel)
-        contentView.addSubview(completedDaysLabel)
-        contentView.addSubview(completeButton)
-        
-        NSLayoutConstraint.activate([
-            cardView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            cardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            cardView.heightAnchor.constraint(equalTo: cardView.widthAnchor, multiplier: 0.55),
-            emojiBackgroundView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 12),
-            emojiBackgroundView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
-            emojiBackgroundView.widthAnchor.constraint(equalToConstant: 24),
-            emojiBackgroundView.heightAnchor.constraint(equalTo: emojiBackgroundView.widthAnchor),
-            emojiLabel.centerXAnchor.constraint(equalTo: emojiBackgroundView.centerXAnchor),
-            emojiLabel.centerYAnchor.constraint(equalTo: emojiBackgroundView.centerYAnchor),
-            completedDaysLabel.topAnchor.constraint(equalTo: cardView.bottomAnchor, constant: 16),
-            completedDaysLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
-            descriptionLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
-            descriptionLabel.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -12),
-            completeButton.centerYAnchor.constraint(equalTo: completedDaysLabel.centerYAnchor),
-            completeButton.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -12),
-        ])
-    }
-    
     func configure(tracker: Tracker) {
         cardView.backgroundColor = tracker.color
         descriptionLabel.text = tracker.title
         emojiLabel.text = tracker.emoji
+        pinImageView.isHidden = !tracker.pinned
     }
     
     func configure(tracker: Tracker, completedDays: Int, isCompleted: Bool, onComplete: @escaping (() -> Void)) {
@@ -107,15 +85,42 @@ extension TrackerCollectionViewCell {
         completeButton.isHidden = true
     }
     
-    private func formatDays(_ completedDays: Int) -> String {
-        return "numberOfDays".localized(arguments: completedDays)
+    private func setup() {
+        layer.cornerRadius = 16
+        layer.masksToBounds = true
+        
+        contentView.addSubview(cardView)
+        contentView.addSubview(emojiBackgroundView)
+        contentView.addSubview(emojiLabel)
+        contentView.addSubview(pinImageView)
+        contentView.addSubview(descriptionLabel)
+        contentView.addSubview(completedDaysLabel)
+        contentView.addSubview(completeButton)
+        
+        NSLayoutConstraint.activate([
+            cardView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            cardView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            cardView.heightAnchor.constraint(equalTo: cardView.widthAnchor, multiplier: 0.55),
+            emojiBackgroundView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 12),
+            emojiBackgroundView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
+            emojiBackgroundView.widthAnchor.constraint(equalToConstant: 24),
+            emojiBackgroundView.heightAnchor.constraint(equalTo: emojiBackgroundView.widthAnchor),
+            emojiLabel.centerXAnchor.constraint(equalTo: emojiBackgroundView.centerXAnchor),
+            emojiLabel.centerYAnchor.constraint(equalTo: emojiBackgroundView.centerYAnchor),
+            pinImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            pinImageView.centerYAnchor.constraint(equalTo: emojiBackgroundView.centerYAnchor),
+            completedDaysLabel.topAnchor.constraint(equalTo: cardView.bottomAnchor, constant: 16),
+            completedDaysLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12),
+            descriptionLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 12),
+            descriptionLabel.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -12),
+            completeButton.centerYAnchor.constraint(equalTo: completedDaysLabel.centerYAnchor),
+            completeButton.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -12),
+        ])
     }
     
-    override func draw(_ rect: CGRect) {
-        super.draw(rect)
-        
-        let size = emojiBackgroundView.frame.size
-        emojiBackgroundView.layer.cornerRadius = size.width / 2
+    private func formatDays(_ completedDays: Int) -> String {
+        return "numberOfDays".localized(arguments: completedDays)
     }
     
 }
@@ -143,6 +148,13 @@ extension TrackerCollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 14, weight: .medium)
         return label
+    }
+    
+    private func createPinImageView() -> UIImageView {
+        let view = UIImageView()
+        view.image = UIImage(named: "Pin")
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
     
     private func createDescriptionLabel() -> UILabel {
