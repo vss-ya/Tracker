@@ -421,15 +421,6 @@ extension TrackersViewController {
 // MARK: - Factory
 extension TrackersViewController {
     
-    private func createHeaderLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .ypBlack
-        label.font = .systemFont(ofSize: 34, weight: .bold)
-        label.text = "Трекеры"
-        return label
-    }
-    
     private func createAddButton() -> UIButton {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
@@ -452,7 +443,7 @@ extension TrackersViewController {
     private func createSearchField() -> UISearchTextField {
         let searchField = UISearchTextField()
         searchField.translatesAutoresizingMaskIntoConstraints = false
-        searchField.placeholder = "Поиск".localized()
+        searchField.placeholder = "Search".localized()
         searchField.delegate = self
         return searchField
     }

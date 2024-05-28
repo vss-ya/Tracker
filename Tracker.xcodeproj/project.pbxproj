@@ -50,6 +50,8 @@
 		57EC04BE2BF3864A00FAFFA9 /* CategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57EC04BD2BF3864A00FAFFA9 /* CategoryViewModel.swift */; };
 		57EC04C02BF3866200FAFFA9 /* CreateCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57EC04BF2BF3866200FAFFA9 /* CreateCategoryViewController.swift */; };
 		57EC04C22BF3A55700FAFFA9 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57EC04C12BF3A55700FAFFA9 /* String+Extension.swift */; };
+		57FB0FAF2C06475A00288D39 /* StatisticTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57FB0FAE2C06475A00288D39 /* StatisticTableViewCell.swift */; };
+		57FB0FB12C0650FC00288D39 /* Stat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57FB0FB02C0650FC00288D39 /* Stat.swift */; };
 		A6D2425D802582FCB6ADB911 /* Pods_TrackerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ADF6C710BCA1CFCB3752A13 /* Pods_TrackerTests.framework */; };
 		D4D62C45423CA34001D1E479 /* Pods_Tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F5F55BD2B337645CB645B0D /* Pods_Tracker.framework */; };
 /* End PBXBuildFile section */
@@ -112,6 +114,8 @@
 		57EC04BD2BF3864A00FAFFA9 /* CategoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewModel.swift; sourceTree = "<group>"; };
 		57EC04BF2BF3866200FAFFA9 /* CreateCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCategoryViewController.swift; sourceTree = "<group>"; };
 		57EC04C12BF3A55700FAFFA9 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		57FB0FAE2C06475A00288D39 /* StatisticTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticTableViewCell.swift; sourceTree = "<group>"; };
+		57FB0FB02C0650FC00288D39 /* Stat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stat.swift; sourceTree = "<group>"; };
 		8EA575B7A9DD66C2CAA0C3E7 /* Pods-Tracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tracker.debug.xcconfig"; path = "Target Support Files/Pods-Tracker/Pods-Tracker.debug.xcconfig"; sourceTree = "<group>"; };
 		9ADF6C710BCA1CFCB3752A13 /* Pods_TrackerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TrackerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0E89AA1F880E92CC6C2E769 /* Pods-TrackerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TrackerTests.debug.xcconfig"; path = "Target Support Files/Pods-TrackerTests/Pods-TrackerTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -242,6 +246,7 @@
 				5715A67B2BCD3A81003FB557 /* TrackerKind.swift */,
 				5715A6812BCD433E003FB557 /* TrackerOption.swift */,
 				57992CB32C0605D20024A0D0 /* Filter.swift */,
+				57FB0FB02C0650FC00288D39 /* Stat.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -249,11 +254,11 @@
 		576D7D382BBFA7200033E479 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				57EC04B32BF36A5F00FAFFA9 /* Onboarding */,
-				576D7D392BBFA9630033E479 /* Trackers */,
-				576D7D482BBFACE90033E479 /* Schedule */,
 				57EC04B82BF380FC00FAFFA9 /* Category */,
-				576D7D2A2BBEBD5F0033E479 /* StatisticViewController.swift */,
+				57EC04B32BF36A5F00FAFFA9 /* Onboarding */,
+				576D7D482BBFACE90033E479 /* Schedule */,
+				57FB0FAD2C0646FF00288D39 /* Statistic */,
+				576D7D392BBFA9630033E479 /* Trackers */,
 				576D7D282BBEBCAC0033E479 /* TabBarController.swift */,
 			);
 			path = Presentation;
@@ -311,6 +316,15 @@
 				57EC04BF2BF3866200FAFFA9 /* CreateCategoryViewController.swift */,
 			);
 			path = Category;
+			sourceTree = "<group>";
+		};
+		57FB0FAD2C0646FF00288D39 /* Statistic */ = {
+			isa = PBXGroup;
+			children = (
+				57FB0FAE2C06475A00288D39 /* StatisticTableViewCell.swift */,
+				576D7D2A2BBEBD5F0033E479 /* StatisticViewController.swift */,
+			);
+			path = Statistic;
 			sourceTree = "<group>";
 		};
 		A521609AF9AA241BEEE34906 /* Frameworks */ = {
@@ -542,11 +556,13 @@
 				5715A6782BCD2DFC003FB557 /* TrackerRecord.swift in Sources */,
 				57493A562BD8F34400A5098E /* TrackerRecordStore.swift in Sources */,
 				57EC04C02BF3866200FAFFA9 /* CreateCategoryViewController.swift in Sources */,
+				57FB0FB12C0650FC00288D39 /* Stat.swift in Sources */,
 				5706586E2BD256DE003FD7B1 /* TrackerEmojiCollectionHeaderView.swift in Sources */,
 				57EC04BE2BF3864A00FAFFA9 /* CategoryViewModel.swift in Sources */,
 				576D7D4B2BBFAD380033E479 /* ScheduleTableViewCell.swift in Sources */,
 				5715A67E2BCD3B60003FB557 /* CreateTrackerViewController.swift in Sources */,
 				576D7D2F2BBEBDA10033E479 /* TrackersViewController.swift in Sources */,
+				57FB0FAF2C06475A00288D39 /* StatisticTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

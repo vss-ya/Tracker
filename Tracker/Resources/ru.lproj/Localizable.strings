@@ -14,11 +14,12 @@
 "IrregularEvent" = "Нерегулярное событие";
 "EveryDay" = "Каждый день";
 "NewHabit" = "Новая привычка";
+"NewIrregularEvent" = "Новое нерегулярное событие";
 "EnterTrackerName" = "Введите название трекера";
 "Cancel" = "Отменить";
 "Create" = "Создать";
 "Trackers" = "Трекеры";
-"Поиск" = "Search";
+"Search" = "Поиск";
 "WhatToTrackQuestion" = "Что будем отслеживать?";
 "NothingFound" = "Ничего не найдено";
 "Done" = "Готово";
@@ -41,3 +42,9 @@
 "CompletedTrackers" = "Завершенные";
 "NotCompletedTrackers" = "Не завершенные";
 "Filters" = "Фильтры";
+"Statistic" = "Статистика";
+"EmptyStatText" = "Анализировать пока нечего";
+"StatBestPeriod" = "Лучший период";
+"StatIdealDays" = "Идеальные дни";
+"StatCompletedTrackers" = "Трекеров завершено";
+"StatAverageValue" = "Среднее значение";

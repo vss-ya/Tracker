@@ -190,17 +190,15 @@ extension CreateTrackerViewController {
     }
     
     private func trackerKindDidChange() {
-        options = switch trackerKind {
-        case .habit: 
-            [.category, .schedule]
-        default: 
-            [.category]
-        }
-        schedule = switch trackerKind {
+        switch trackerKind {
         case .habit:
-            tracker?.schedule ?? []
+            headerLabel.text = "NewHabit".localized()
+            options = [.category, .schedule]
+            schedule = tracker?.schedule ?? []
         default:
-            WeekDay.allCases
+            headerLabel.text = "NewIrregularEvent".localized()
+            options = [.category]
+            schedule = WeekDay.allCases
         }
         tableViewHeightConstraint.constant = CGFloat(options.count) * optionCellHeight
         tableView.reloadData()
