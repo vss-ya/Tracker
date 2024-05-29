@@ -18,6 +18,8 @@ final class TrackersViewController: UIViewController {
     private lazy var collectionView: UICollectionView = { createCollectionView() }()
     private lazy var filterButton: UIButton = { createFilterButton() }()
     
+    private let analytics = Analytics.shared
+    
     private let trackerStore = TrackerStore()
     private let trackerCategoryStore = TrackerCategoryStore()
     private let trackerRecordStore = TrackerRecordStore()
@@ -46,12 +48,23 @@ final class TrackersViewController: UIViewController {
         loadData()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        analytics.open(screen: .main)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analytics.close(screen: .main)
+    }
+    
 }
 
 // MARK: - Actions
 extension TrackersViewController {
     
     @objc private func addAction() {
+        analytics.click(screen: .main, item: .addTrack)
         let vc = AddTrackerViewController()
         vc.onCreateTrackerCallback = { [weak self] in
             guard let self else {
@@ -68,6 +81,7 @@ extension TrackersViewController {
     }
     
     @objc private func filterAction() {
+        analytics.click(screen: .main, item: .filter)
         let vc = TrackersFilterViewController(
             selectedFilter: selectedFilter) 
         { [weak self] filter in
@@ -239,6 +253,7 @@ extension TrackersViewController {
             guard let self else {
                 return
             }
+            analytics.click(screen: .main, item: .track)
             if isCompleted {
                 removeCompletedTracker(tracker)
                 collectionView.reloadItems(at: [indexPath])
@@ -373,6 +388,7 @@ extension TrackersViewController {
     }
     
     private func performDeleteAction(for tracker: Tracker) {
+        analytics.click(screen: .main, item: .delete)
         let ac = UIAlertController(title: nil,
                                    message: L10n.deleteTrackerQuestion,
                                    preferredStyle: .actionSheet)
@@ -389,6 +405,7 @@ extension TrackersViewController {
     }
     
     func performEditAction(for tracker: Tracker) {
+        analytics.click(screen: .main, item: .edit)
         let category = categories.first {
             $0.trackers.contains {
                 $0.id == tracker.id
