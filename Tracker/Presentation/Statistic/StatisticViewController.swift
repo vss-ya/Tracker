@@ -83,26 +83,22 @@ final class StatisticViewController: UIViewController {
         emptyStatImageView.isHidden = !isEmpty
         emptyStatLabel.isHidden = !isEmpty
         tableView.isHidden = isEmpty
+        tableView.reloadData()
     }
     
-    func onlyDate(_ date: Date) -> Date {
-        var dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
-        return calendar.date(from: dateComponents)!
-    }
-    
-    func calcBestPeriod() -> Int {
+    private func calcBestPeriod() -> Int {
         return 0
     }
     
-    func calcIdealDays() -> Int {
+    private func calcIdealDays() -> Int {
         return 0
     }
     
-    func calcCompletedTrackers() -> Int {
+    private func calcCompletedTrackers() -> Int {
         return completedTrackers.count
     }
     
-    func calcAverageValue() -> Int {
+    private func calcAverageValue() -> Int {
         return 0
     }
     
