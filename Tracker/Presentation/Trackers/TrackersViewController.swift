@@ -227,7 +227,7 @@ extension TrackersViewController {
     }
     
     private func updateScreen() {
-        if searchText.isEmpty {
+        if trackers.isEmpty {
             showDefaultScreen()
         } else {
             showSearchScreen()
