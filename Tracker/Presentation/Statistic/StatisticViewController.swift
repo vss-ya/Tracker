@@ -116,7 +116,7 @@ extension StatisticViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .ypBlack
         label.font = .systemFont(ofSize: 34, weight: .bold)
-        label.text = "Statistic".localized()
+        label.text = L10n.statistic
         return label
     }
     
@@ -132,7 +132,7 @@ extension StatisticViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .ypBlack
         label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.text = "EmptyStatText".localized()
+        label.text = L10n.emptyStatText
         return label
     }
     

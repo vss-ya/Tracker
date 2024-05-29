@@ -172,9 +172,9 @@ extension CreateTrackerViewController {
                 nameTextField.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 38),
             ])
         } else {
-            headerLabel.text = "EditHabit".localized()
-            completedDaysLabel.text = "numberOfDays".localized(arguments: completedDays)
-            createButton.setTitle("Save".localized(), for: .normal)
+            headerLabel.text = L10n.editHabit
+            completedDaysLabel.text = L10n.numberOfDays(completedDays)
+            createButton.setTitle(L10n.save, for: .normal)
             NSLayoutConstraint.activate([
                 completedDaysLabel.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 38),
                 completedDaysLabel.centerXAnchor.constraint(equalTo: headerLabel.centerXAnchor),
@@ -192,11 +192,11 @@ extension CreateTrackerViewController {
     private func trackerKindDidChange() {
         switch trackerKind {
         case .habit:
-            headerLabel.text = "NewHabit".localized()
+            headerLabel.text = L10n.newHabit
             options = [.category, .schedule]
             schedule = tracker?.schedule ?? []
         default:
-            headerLabel.text = "NewIrregularEvent".localized()
+            headerLabel.text = L10n.newIrregularEvent
             options = [.category]
             schedule = WeekDay.allCases
         }
@@ -260,7 +260,7 @@ extension CreateTrackerViewController {
         case 1:
             let description = switch schedule.count {
             case WeekDay.allCases.count:
-                "EveryDay".localized()
+                L10n.everyDay
             default:
                 schedule.map({ $0.shortName }).joined(separator: ", ")
             }
@@ -288,7 +288,7 @@ extension CreateTrackerViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .ypBlack
-        label.text = "NewHabit".localized()
+        label.text = L10n.newHabit
         return label
     }
     
@@ -314,7 +314,7 @@ extension CreateTrackerViewController {
         field.rightViewMode = .whileEditing
         field.textColor = .ypBlack
         field.font = .systemFont(ofSize: 17, weight: .regular)
-        field.placeholder = "EnterTrackerName".localized()
+        field.placeholder = L10n.enterTrackerName
         field.delegate = self
         return field
     }
@@ -380,7 +380,7 @@ extension CreateTrackerViewController {
         btn.layer.borderColor = UIColor.ypRed.cgColor
         btn.layer.cornerRadius = 16
         btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        btn.setTitle("Cancel".localized(), for: .normal)
+        btn.setTitle(L10n.cancel, for: .normal)
         btn.addTarget(self, action: #selector(cancelAction), for: .touchUpInside)
         return btn
     }
@@ -393,7 +393,7 @@ extension CreateTrackerViewController {
         btn.layer.cornerRadius = 16
         btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         btn.isEnabled = false
-        btn.setTitle("Create".localized(), for: .normal)
+        btn.setTitle(L10n.create, for: .normal)
         btn.addTarget(self, action: #selector(createAction), for: .touchUpInside)
         btn.isEnabled = false
         return btn
@@ -517,7 +517,7 @@ extension CreateTrackerViewController: UICollectionViewDataSource {
             guard let view else {
                 return UICollectionReusableView()
             }
-            view.title = "Emoji"
+            view.title = L10n.emoji
             return view
         case colorCollectionView:
             let view = collectionView.dequeueReusableSupplementaryView(
@@ -528,7 +528,7 @@ extension CreateTrackerViewController: UICollectionViewDataSource {
             guard let view else {
                 return UICollectionReusableView()
             }
-            view.title = "Цвет"
+            view.title = L10n.color
             return view
         default:
             return UICollectionReusableView()

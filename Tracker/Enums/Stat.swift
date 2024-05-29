@@ -16,13 +16,13 @@ enum Stat: String, CaseIterable {
     var description: String {
         switch self {
         case .bestPeriod:
-            return "StatBestPeriod".localized()
+            L10n.statBestPeriod
         case .idealDays:
-            return "StatIdealDays".localized()
+            L10n.statIdealDays
         case .completedTrackers:
-            return "StatCompletedTrackers".localized()
+            L10n.statCompletedTrackers
         case .averageValue:
-            return "StatAverageValue".localized()
+            L10n.statAverageValue
         }
     }
 }

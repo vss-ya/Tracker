@@ -6,11 +6,11 @@
   
 */
 
-"OnboardingPage1" = "Отслеживайте только\nто, что хотите";
-"OnboardingPage2" = "Даже если это\nне литры воды и йога";
+"OnboardingPage1Text" = "Отслеживайте только\nто, что хотите";
+"OnboardingPage2Text" = "Даже если это\nне литры воды и йога";
 "Category" = "Категория";
 "Schedule" = "Расписание";
-"OnboardingFinishButtonTitle" = "Вот это технологии!";
+"OnboardingFinishButtonTitle" = "What a technology!";
 "CreateTracker" = "Создание трекера";
 "Habit" = "Привычка";
 "IrregularEvent" = "Нерегулярное событие";
@@ -30,7 +30,6 @@
 "NewCategory" = "Новая категория";
 "EnterCategoryName" = "Введите название категории";
 "Trackers" = "Трекеры";
-"Stats" = "Статистика";
 "Unpin" = "Открепить";
 "Pin" = "Закрепить";
 "Edit" = "Редактировать";
@@ -50,3 +49,5 @@
 "StatIdealDays" = "Идеальные дни";
 "StatCompletedTrackers" = "Трекеров завершено";
 "StatAverageValue" = "Среднее значение";
+"Emoji" = "Emoji";
+"Color" = "Цвет";

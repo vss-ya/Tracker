@@ -24,7 +24,7 @@ final class OnboardingViewController: UIPageViewController {
         button.layer.cornerRadius = 16
         button.setTitleColor(.ypWhite, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        button.setTitle("OnboardingFinishButtonTitle".localized(), for: .normal)
+        button.setTitle(L10n.onboardingFinishButtonTitle, for: .normal)
         button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         return button
     }()
@@ -94,12 +94,12 @@ private extension OnboardingViewController {
     func setupPages() {
         let page1 = createPageViewController(
             imageName: "OnboardingPage1",
-            labelText: "OnboardingPage1".localized()
+            labelText: L10n.onboardingPage1Text
         )
         
         let page2 = createPageViewController(
             imageName: "OnboardingPage2",
-            labelText: "OnboardingPage2".localized()
+            labelText: L10n.onboardingPage2Text
         )
         
         pages.append(page1)

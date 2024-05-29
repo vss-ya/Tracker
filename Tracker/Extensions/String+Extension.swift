@@ -17,12 +17,4 @@ extension String {
         self = trimmed()
     }
     
-    func localized(comment: String = "") -> String {
-        return NSLocalizedString(self, comment: comment)
-    }
-    
-    func localized(comment: String = "", arguments: any CVarArg...) -> String {
-        return String.localizedStringWithFormat(NSLocalizedString(self, comment: comment), arguments)
-    }
-    
 }

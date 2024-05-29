@@ -120,7 +120,7 @@ extension TrackerCollectionViewCell {
     }
     
     private func formatDays(_ completedDays: Int) -> String {
-        return "numberOfDays".localized(arguments: completedDays)
+        return L10n.numberOfDays(completedDays)
     }
     
 }

@@ -6,8 +6,8 @@
   
 */
 
-"OnboardingPage1" = "Only track\nwhat you want";
-"OnboardingPage2" = "Even if it's not liters\nof water and yoga";
+"OnboardingPage1Text" = "Only track\nwhat you want";
+"OnboardingPage2Text" = "Even if it's not liters\nof water and yoga";
 "Category" = "Category";
 "Schedule" = "Schedule";
 "OnboardingFinishButtonTitle" = "This is technology!";
@@ -30,7 +30,6 @@
 "NewCategory" = "New Category";
 "EnterCategoryName" = "Enter the category name";
 "Trackers" = "Trackers";
-"Stats" = "Statistics";
 "Unpin" = "Unpin";
 "Pin" = "Pin";
 "Edit" = "Edit";
@@ -50,3 +49,5 @@
 "StatIdealDays" = "Ideal days";
 "StatCompletedTrackers" = "Trackers completed";
 "StatAverageValue" = "Average value";
+"Emoji" = "Emoji";
+"Color" = "Color";

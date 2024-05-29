@@ -103,7 +103,7 @@ extension ScheduleViewController {
     private func createHeaderLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Schedule".localized()
+        label.text = L10n.schedule
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .ypBlack
         return label
@@ -128,7 +128,7 @@ extension ScheduleViewController {
         btn.backgroundColor = .ypBlack
         btn.layer.cornerRadius = 16
         btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        btn.setTitle("Done".localized(), for: .normal)
+        btn.setTitle(L10n.done, for: .normal)
         btn.addTarget(self, action: #selector(doneAction), for: .touchUpInside)
         return btn
     }

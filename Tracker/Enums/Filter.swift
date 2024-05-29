@@ -16,13 +16,13 @@ enum Filter: String, CaseIterable {
     var description: String {
         switch self {
         case .allTrackers:
-            return "AllTrackers".localized()
+            return L10n.allTrackers
         case .todayTrackers:
-            return "TodayTrackers".localized()
+            return L10n.todayTrackers
         case .completedTrackers:
-            return "CompletedTrackers".localized()
+            return L10n.completedTrackers
         case .notCompletedTrackers:
-            return "NotCompletedTrackers".localized()
+            return L10n.notCompletedTrackers
         }
     }
 }

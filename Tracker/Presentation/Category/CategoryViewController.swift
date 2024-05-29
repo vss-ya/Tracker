@@ -125,7 +125,7 @@ extension CategoryViewController {
     private func createHeaderLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Category".localized()
+        label.text = L10n.category
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .ypBlack
         return label
@@ -145,7 +145,7 @@ extension CategoryViewController {
         label.font = .systemFont(ofSize: 12, weight: .medium)
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.text = "CategoryEmptyText".localized()
+        label.text = L10n.categoryEmptyText
         return label
     }
     
@@ -168,7 +168,7 @@ extension CategoryViewController {
         btn.backgroundColor = .ypBlack
         btn.layer.cornerRadius = 16
         btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        btn.setTitle("AddCategory".localized(), for: .normal)
+        btn.setTitle(L10n.addCategory, for: .normal)
         btn.addTarget(self, action: #selector(addAction), for: .touchUpInside)
         return btn
     }

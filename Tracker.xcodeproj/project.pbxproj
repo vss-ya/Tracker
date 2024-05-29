@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		570132C72C072B2700D4C011 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570132C62C072B2700D4C011 /* Strings.swift */; };
 		5706586C2BD25658003FD7B1 /* TrackerEmojiCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5706586B2BD25658003FD7B1 /* TrackerEmojiCollectionViewCell.swift */; };
 		5706586E2BD256DE003FD7B1 /* TrackerEmojiCollectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5706586D2BD256DE003FD7B1 /* TrackerEmojiCollectionHeaderView.swift */; };
 		570658702BD25B0D003FD7B1 /* TrackerColorCollectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5706586F2BD25B0D003FD7B1 /* TrackerColorCollectionHeaderView.swift */; };
@@ -68,6 +69,7 @@
 
 /* Begin PBXFileReference section */
 		4F5F55BD2B337645CB645B0D /* Pods_Tracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		570132C62C072B2700D4C011 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Strings.swift; path = Generated/Strings.swift; sourceTree = SOURCE_ROOT; };
 		5706586B2BD25658003FD7B1 /* TrackerEmojiCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerEmojiCollectionViewCell.swift; sourceTree = "<group>"; };
 		5706586D2BD256DE003FD7B1 /* TrackerEmojiCollectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerEmojiCollectionHeaderView.swift; sourceTree = "<group>"; };
 		5706586F2BD25B0D003FD7B1 /* TrackerColorCollectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerColorCollectionHeaderView.swift; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 		576D7D352BBFA0680033E479 /* Enums */ = {
 			isa = PBXGroup;
 			children = (
+				570132C62C072B2700D4C011 /* Strings.swift */,
 				576D7D362BBFA0950033E479 /* WeekDay.swift */,
 				5715A6792BCD34D0003FB557 /* Constants.swift */,
 				5715A67B2BCD3A81003FB557 /* TrackerKind.swift */,
@@ -559,6 +562,7 @@
 				576D7D172BBEB5B10033E479 /* SceneDelegate.swift in Sources */,
 				5715A6782BCD2DFC003FB557 /* TrackerRecord.swift in Sources */,
 				57493A562BD8F34400A5098E /* TrackerRecordStore.swift in Sources */,
+				570132C72C072B2700D4C011 /* Strings.swift in Sources */,
 				57EC04C02BF3866200FAFFA9 /* CreateCategoryViewController.swift in Sources */,
 				57FB0FB12C0650FC00288D39 /* Stat.swift in Sources */,
 				5706586E2BD256DE003FD7B1 /* TrackerEmojiCollectionHeaderView.swift in Sources */,

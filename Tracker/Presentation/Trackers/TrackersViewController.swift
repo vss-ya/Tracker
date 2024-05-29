@@ -182,7 +182,7 @@ extension TrackersViewController {
         navigationItem.searchController = searchController
         navigationItem.searchController?.hidesNavigationBarDuringPresentation = false
         navigationController?.navigationBar.prefersLargeTitles = true
-        title = "Trackers".localized()
+        title = L10n.trackers
     }
     
     private func loadData() {
@@ -251,7 +251,7 @@ extension TrackersViewController {
     
     private func filterVisibleCategories() {
         let pinnedTrackers = trackers.filter { $0.pinned }
-        let pinnedCategory = TrackerCategory(header: "Pinned".localized(),
+        let pinnedCategory = TrackerCategory(header: L10n.pinned,
                                              trackers: pinnedTrackers)
         visibleCategories = ([pinnedCategory] + categories).enumerated().map { (index, category) in
             let trackers = category.trackers.filter { tracker in
@@ -351,21 +351,21 @@ extension TrackersViewController {
         let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
         let pinAction = switch tracker.pinned {
         case true:
-            UIAction(title: "Unpin".localized()) { [weak self] _ in
+            UIAction(title: L10n.unpin) { [weak self] _ in
                 guard let self else { return }
                 pin(tracker: tracker, false)
             }
         case false:
-            UIAction(title: "Pin".localized()) { [weak self] _ in
+            UIAction(title: L10n.pin) { [weak self] _ in
                 guard let self else { return }
                 pin(tracker: tracker, true)
             }
         }
-        let editAction = UIAction(title: "Edit".localized()) { [weak self] _ in
+        let editAction = UIAction(title: L10n.edit) { [weak self] _ in
             guard let self else { return }
             performEditAction(for: tracker)
         }
-        let deleteAction = UIAction(title: "Delete".localized(), attributes: .destructive) { [weak self] _ in
+        let deleteAction = UIAction(title: L10n.delete, attributes: .destructive) { [weak self] _ in
             guard let self else { return }
             performDeleteAction(for: tracker)
         }
@@ -374,13 +374,13 @@ extension TrackersViewController {
     
     private func performDeleteAction(for tracker: Tracker) {
         let ac = UIAlertController(title: nil,
-                                   message: "DeleteTrackerQuestion".localized(),
+                                   message: L10n.deleteTrackerQuestion,
                                    preferredStyle: .actionSheet)
-        let deleteAction = UIAlertAction(title: "Delete".localized(), style: .destructive) { [weak self] _ in
+        let deleteAction = UIAlertAction(title: L10n.delete, style: .destructive) { [weak self] _ in
             guard let self else { return }
             delete(tracker: tracker)
         }
-        let cancelAction = UIAlertAction(title: "Cancel".localized(), style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: L10n.cancel, style: .cancel, handler: nil)
         
         ac.addAction(deleteAction)
         ac.addAction(cancelAction)
@@ -434,7 +434,7 @@ extension TrackersViewController {
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         datePicker.preferredDatePickerStyle = .compact
         datePicker.datePickerMode = .date
-        datePicker.locale = Locale(identifier: "ru_Ru")
+        datePicker.locale = Locale.current
         datePicker.calendar.firstWeekday = 2
         datePicker.addTarget(self, action: #selector(datePickerValueChangedAction), for: .valueChanged)
         return datePicker
@@ -443,7 +443,7 @@ extension TrackersViewController {
     private func createSearchField() -> UISearchTextField {
         let searchField = UISearchTextField()
         searchField.translatesAutoresizingMaskIntoConstraints = false
-        searchField.placeholder = "Search".localized()
+        searchField.placeholder = L10n.search
         searchField.delegate = self
         return searchField
     }
@@ -460,7 +460,7 @@ extension TrackersViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .ypBlack
         label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.text = "WhatToTrackQuestion".localized()
+        label.text = L10n.whatToTrackQuestion
         return label
     }
     
@@ -476,7 +476,7 @@ extension TrackersViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .ypBlack
         label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.text = "NothingFound".localized()
+        label.text = L10n.nothingFound
         return label
     }
     
@@ -501,7 +501,7 @@ extension TrackersViewController {
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.layer.cornerRadius = 16
         btn.backgroundColor = .ypBlue
-        btn.setTitle("Filters".localized(), for: .normal)
+        btn.setTitle(L10n.filters, for: .normal)
         btn.addTarget(self, action: #selector(filterAction), for: .touchUpInside)
         return btn
     }
