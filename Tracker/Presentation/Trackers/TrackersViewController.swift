@@ -424,7 +424,7 @@ extension TrackersViewController {
     private func createAddButton() -> UIButton {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setImage(UIImage(named: "AddTracker"), for: .normal)
+        btn.setImage(.addTracker, for: .normal)
         btn.addTarget(self, action: #selector(addAction), for: .touchUpInside)
         return btn
     }
@@ -451,7 +451,7 @@ extension TrackersViewController {
     private func createEmptyTrackersImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "EmptyTrackers")
+        imageView.image = .emptyTrackers
         return imageView
     }
     
@@ -467,7 +467,7 @@ extension TrackersViewController {
     private func createEmptySearchImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "EmptySearch")
+        imageView.image = .emptySearch
         return imageView
     }
     

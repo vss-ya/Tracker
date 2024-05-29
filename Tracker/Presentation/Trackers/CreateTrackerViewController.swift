@@ -321,7 +321,7 @@ extension CreateTrackerViewController {
     
     private func createNameClearButton() -> UIButton {
         let btn = UIButton(type: .custom)
-        btn.setImage(UIImage(named: "Clean"), for: .normal)
+        btn.setImage(.clean, for: .normal)
         btn.frame = CGRect(x: 0, y: 0, width: 17, height: 17)
         btn.contentMode = .scaleAspectFit
         btn.isHidden = true

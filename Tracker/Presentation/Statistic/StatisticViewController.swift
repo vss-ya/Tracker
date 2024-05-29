@@ -123,7 +123,7 @@ extension StatisticViewController {
     private func createEmptyStatImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "EmptyStat")
+        imageView.image = .emptyStat
         return imageView
     }
     

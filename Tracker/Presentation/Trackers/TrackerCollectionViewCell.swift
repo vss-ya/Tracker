@@ -19,8 +19,8 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     private lazy var completedDaysLabel: UILabel = { createCompletedDaysLabel() }()
     private lazy var completeButton: UIButton = { createCompleteButton() }()
     
-    private let doneImage = UIImage(named: "Done")
-    private let plusImage = UIImage(named: "Plus")
+    private let doneImage: UIImage = .done
+    private let plusImage: UIImage = .plus
     
     private var completeCallback: (() -> Void)?
     
@@ -72,7 +72,7 @@ extension TrackerCollectionViewCell {
         completedDaysLabel.text = formatDays(completedDays)
         completeCallback = onComplete
         
-        let image = (isCompleted ? doneImage : plusImage)?.withTintColor(tracker.color)
+        let image = (isCompleted ? doneImage : plusImage).withTintColor(tracker.color)
         completeButton.setImage(image, for: .normal)
     }
     
@@ -152,7 +152,7 @@ extension TrackerCollectionViewCell {
     
     private func createPinImageView() -> UIImageView {
         let view = UIImageView()
-        view.image = UIImage(named: "Pin")
+        view.image = .pin
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }

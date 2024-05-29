@@ -134,7 +134,7 @@ extension CategoryViewController {
     private func createEmptyImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "EmptyTrackers")
+        imageView.image = .emptyTrackers
         return imageView
     }
     

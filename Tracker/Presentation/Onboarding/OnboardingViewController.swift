@@ -93,12 +93,12 @@ private extension OnboardingViewController {
     
     func setupPages() {
         let page1 = createPageViewController(
-            imageName: "OnboardingPage1",
+            image: .onboardingPage1,
             labelText: L10n.onboardingPage1Text
         )
         
         let page2 = createPageViewController(
-            imageName: "OnboardingPage2",
+            image: .onboardingPage2,
             labelText: L10n.onboardingPage2Text
         )
         
@@ -110,10 +110,10 @@ private extension OnboardingViewController {
         setViewControllers([page1], direction: .forward, animated: true, completion: nil)
     }
     
-    func createPageViewController(imageName: String, labelText: String) -> UIViewController {
+    func createPageViewController(image: UIImage, labelText: String) -> UIViewController {
         let vc = UIViewController()
         
-        let imageView = UIImageView(image: UIImage(named: imageName))
+        let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(imageView)
