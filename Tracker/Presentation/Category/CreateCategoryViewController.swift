@@ -18,7 +18,7 @@ final class CreateCategoryViewController: UIViewController {
     private var name: String { (nameTextField.text ?? "").trimmed() }
     private var onCreateCallback: ((TrackerCategory)->(Void))?
     
-    convenience init(_ onCreate: ((TrackerCategory) -> Void)? = nil) {
+    convenience init(onCreate: ((TrackerCategory) -> Void)? = nil) {
         self.init()
         self.onCreateCallback = onCreate
     }

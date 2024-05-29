@@ -36,7 +36,14 @@ final class Analytics {
     
     static let shared = Analytics()
     
-    private init() { }
+    static func register() {
+        let _ = shared
+    }
+    
+    private init() { 
+        let configuration = YMMYandexMetricaConfiguration(apiKey: "49065d35-9089-402a-8ef8-ff49e793fc15")
+        YMMYandexMetrica.activate(with: configuration!)
+    }
     
     func report(_ event: Event, params : [Key : Any]) {
         let params = params.reduce(into: [String: Any]()) { partialResult, kv in

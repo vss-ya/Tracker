@@ -18,7 +18,7 @@ final class TrackerRecordStore: NSObject {
     private lazy var fetchedResultsController = {
         let fetchRequest = TrackerRecordCoreData.fetchRequest()
         fetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \TrackerRecordCoreData.id, ascending: true)
+            NSSortDescriptor(keyPath: \TrackerRecordCoreData.date, ascending: true)
         ]
         let controller = NSFetchedResultsController(
             fetchRequest: fetchRequest,
@@ -29,19 +29,8 @@ final class TrackerRecordStore: NSObject {
         try? controller.performFetch()
         return controller
     }()
-    private var fetchedObjects: [TrackerRecordCoreData] { fetchedResultsController.fetchedObjects ?? [] }
-    
-    var trackerRecords: [TrackerRecord] { fetchTrackerRecords() }
+    var fetchedObjects: [TrackerRecordCoreData] { fetchedResultsController.fetchedObjects ?? [] }
     weak var delegate: TrackerRecordStoreDelegate?
-    
-    convenience override init() {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            self.init()
-            return
-        }
-        let context = appDelegate.persistentContainer.viewContext
-        self.init(context: context)
-    }
     
     init(context: NSManagedObjectContext) {
         self.context = context

@@ -29,19 +29,8 @@ final class TrackerCategoryStore: NSObject {
         try? controller.performFetch()
         return controller
     }()
-    private var fetchedObjects: [TrackerCategoryCoreData] { fetchedResultsController.fetchedObjects ?? [] }
-    
-    var trackerCategories: [TrackerCategory] { fetchTrackerCategories() }
+    var fetchedObjects: [TrackerCategoryCoreData] { fetchedResultsController.fetchedObjects ?? [] }
     weak var delegate: TrackerCategoryStoreDelegate?
-    
-    convenience override init() {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            self.init()
-            return
-        }
-        let context = appDelegate.persistentContainer.viewContext
-        self.init(context: context)
-    }
     
     init(context: NSManagedObjectContext) {
         self.context = context
@@ -56,16 +45,16 @@ final class TrackerCategoryStore: NSObject {
         try? context.save()
     }
     
-    func addToCategory(withHeader header: String, tracker: Tracker) {
+    func addToCategory(withHeader header: String, tracker: UUID) {
         guard let coreData = fetchedObjects.first(where: { $0.header == header }) else {
             assertionFailure("Invalid Configuration")
             return
         }
         let trackers = coreData.trackers ?? []
-        guard !trackers.contains(where: { $0 == tracker.id }) else {
+        guard !trackers.contains(where: { $0 == tracker }) else {
             return
         }
-        coreData.trackers = trackers + [tracker.id]
+        coreData.trackers = trackers + [tracker]
         try? context.save()
     }
     
@@ -81,30 +70,6 @@ final class TrackerCategoryStore: NSObject {
             $0 != tracker
         })
         try? context.save()
-    }
-    
-    private func trackerCategory(from coreData: TrackerCategoryCoreData) -> TrackerCategory? {
-        guard
-            let header = coreData.header,
-            let trackers = coreData.trackers
-        else {
-            return nil
-        }
-        let trackerStore = TrackerStore()
-        let result = TrackerCategory(
-            header: header,
-            trackers: trackerStore.trackers.filter { tracker in
-                trackers.contains(where: {
-                    tracker.id == $0
-                })
-            }
-        )
-        return result
-    }
-    
-    private func fetchTrackerCategories() -> [TrackerCategory] {
-        let result = fetchedObjects.compactMap({ trackerCategory(from: $0) })
-        return result
     }
     
 }

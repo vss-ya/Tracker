@@ -14,11 +14,9 @@ final class StatisticViewController: UIViewController {
     private lazy var emptyStatLabel: UILabel = { createEmptyStatLabel() }()
     private lazy var tableView: UITableView = { createTableView() }()
     
+    private let store = Store.shared
     private let calendar: Calendar = Calendar.current
     private let stats = Stat.allCases
-    
-    private let trackerStore = TrackerStore()
-    private let trackerRecordStore = TrackerRecordStore()
     
     private var trackers: [Tracker] = []
     private var completedTrackers: [TrackerRecord] = []
@@ -72,8 +70,8 @@ final class StatisticViewController: UIViewController {
     }
     
     private func loadData() {
-        trackers = trackerStore.trackers
-        completedTrackers = trackerRecordStore.trackerRecords
+        trackers = store.trackers
+        completedTrackers = store.trackerRecords
         updateScreen()
     }
     

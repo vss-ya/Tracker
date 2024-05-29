@@ -5,7 +5,7 @@
 //  Created by vs on 14.05.2024.
 //
 
-import CoreData
+import Foundation
 
 protocol CategoryViewProtocol: AnyObject {
     typealias Binding<T> = (T) -> Void
@@ -27,7 +27,8 @@ final class CategoryViewModel: CategoryViewProtocol {
     
     typealias Binding<T> = (T) -> Void
     
-    private var categoryStore = TrackerCategoryStore()
+    private let notificationCenter = NotificationCenter.default
+    private let store = Store.shared
     
     private(set) var categories: [TrackerCategory] = [] {
         didSet {
@@ -45,12 +46,15 @@ final class CategoryViewModel: CategoryViewProtocol {
     var onSelectedCategoryStateChange: Binding<TrackerCategory?>?
     
     init() {
-        categoryStore.delegate = self
-        categories = categoryStore.trackerCategories
+        categories = store.trackerCategories
+        notificationCenter.addObserver(self,
+                                       selector: #selector(storeDidUpdate),
+                                       name: .storeDidUpdate,
+                                       object: store)
     }
     
     func addCategory(header: String) {
-        categoryStore.save(TrackerCategory(header: header, trackers: []))
+        store.saveCategory(header: header)
     }
     
     func selectCategory(at index: Int) {
@@ -70,9 +74,9 @@ final class CategoryViewModel: CategoryViewProtocol {
     
 }
 
-extension CategoryViewModel: TrackerCategoryStoreDelegate {
+extension CategoryViewModel {
     
-    func storeDidChange(_ store: TrackerCategoryStore) {
+    @objc private func storeDidUpdate() {
         categories = store.trackerCategories
     }
     

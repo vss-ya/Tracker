@@ -18,16 +18,14 @@ final class TrackersViewController: UIViewController {
     private lazy var collectionView: UICollectionView = { createCollectionView() }()
     private lazy var filterButton: UIButton = { createFilterButton() }()
     
+    private let notificationCenter = NotificationCenter.default
+    private let store = Store.shared
     private let analytics = Analytics.shared
     
-    private let trackerStore = TrackerStore()
-    private let trackerCategoryStore = TrackerCategoryStore()
-    private let trackerRecordStore = TrackerRecordStore()
-    
     private var trackers: [Tracker] = []
-    private var categories: [TrackerCategory] = []
+    private var trackerRecords: [TrackerRecord] = []
+    private var trackerCategories: [TrackerCategory] = []
     private var visibleCategories: [TrackerCategory] = []
-    private var completedTrackers: [TrackerRecord] = []
     
     private var calendar: Calendar = Calendar.current
     private var selectedWeekday: Int {
@@ -70,7 +68,7 @@ extension TrackersViewController {
             guard let self else {
                 return
             }
-            add(tracker: $0, category: $1)
+            store.save(tracker: $0, category: $1)
             dismiss(animated: true)
         }
         present(vc, animated: true, completion: nil)
@@ -108,33 +106,10 @@ extension TrackersViewController {
     
 }
 
-// MARK: - TrackerStoreDelegate
-extension TrackersViewController: TrackerStoreDelegate {
+extension TrackersViewController {
     
-    func storeDidChange(_ store: TrackerStore) {
-        trackers = store.trackers
-        categories = trackerCategoryStore.trackerCategories
-        filterTrackers()
-    }
-    
-}
-
-// MARK: - TrackerStoreDelegate
-extension TrackersViewController: TrackerCategoryStoreDelegate {
-    
-    func storeDidChange(_ store: TrackerCategoryStore) {
-        categories = store.trackerCategories
-        filterTrackers()
-    }
-    
-}
-
-// MARK: - TrackerRecordStoreDelegate
-extension TrackersViewController: TrackerRecordStoreDelegate {
-    
-    func storeDidChange(_ store: TrackerRecordStore) {
-        completedTrackers = store.trackerRecords
-        filterTrackers()
+    @objc private func storeDidUpdate() {
+        loadData()
     }
     
 }
@@ -146,9 +121,10 @@ extension TrackersViewController {
         setupViews()
         setupConstraints()
         
-        trackerStore.delegate = self
-        trackerCategoryStore.delegate = self
-        trackerRecordStore.delegate = self
+        notificationCenter.addObserver(self,
+                                       selector: #selector(storeDidUpdate),
+                                       name: .storeDidUpdate,
+                                       object: store)
     }
     
     private func setupViews() {
@@ -199,12 +175,10 @@ extension TrackersViewController {
     }
     
     private func loadData() {
-        trackers = trackerStore.trackers
-        completedTrackers = trackerRecordStore.trackerRecords
-        categories = trackerCategoryStore.trackerCategories
-        
-        filterVisibleCategories()
-        updateScreen()
+        trackers = store.trackers
+        trackerRecords = store.trackerRecords
+        trackerCategories = store.trackerCategories
+        filterTrackers()
     }
     
     private func showDefaultScreen() {
@@ -242,7 +216,7 @@ extension TrackersViewController {
     private func configure(_ cell: TrackerCollectionViewCell, at indexPath: IndexPath) {
         let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
         let isCompleted = isTrackerCompleted(id: tracker.id)
-        let completedDays = completedTrackers.filter {
+        let completedDays = trackerRecords.filter {
             $0.id == tracker.id
         }.count
         cell.configure(tracker: tracker,
@@ -267,7 +241,7 @@ extension TrackersViewController {
         let pinnedTrackers = trackers.filter { $0.pinned }
         let pinnedCategory = TrackerCategory(header: L10n.pinned,
                                              trackers: pinnedTrackers)
-        visibleCategories = ([pinnedCategory] + categories).enumerated().map { (index, category) in
+        visibleCategories = ([pinnedCategory] + trackerCategories).enumerated().map { (index, category) in
             let trackers = category.trackers.filter { tracker in
                 let scheduleContains = tracker.schedule?.contains { day in
                     return day.rawValue == selectedWeekday
@@ -305,33 +279,8 @@ extension TrackersViewController {
         updateScreen()
     }
     
-    private func add(tracker: Tracker, category: TrackerCategory) {
-        trackerStore.save(tracker)
-        trackerCategoryStore.addToCategory(withHeader: category.header, tracker: tracker)
-        filterTrackers()
-    }
-    
-    private func pin(tracker: Tracker, _ pinned: Bool) {
-        trackerStore.pin(id: tracker.id, pinned)
-    }
-    
-    private func update(tracker: Tracker, category: TrackerCategory) {
-        trackerStore.delete(id: tracker.id)
-        trackerCategoryStore.delete(tracker: tracker.id)
-        trackerStore.save(tracker)
-        trackerCategoryStore.addToCategory(withHeader: category.header, tracker: tracker)
-        filterTrackers()
-    }
-    
-    private func delete(tracker: Tracker) {
-        trackerStore.delete(id: tracker.id)
-        trackerRecordStore.delete(id: tracker.id)
-        trackerCategoryStore.delete(tracker: tracker.id)
-        filterTrackers()
-    }
-    
     private func isTrackerCompleted(id: UUID) -> Bool {
-        return completedTrackers.contains {
+        return trackerRecords.contains {
             $0.id == id && calendar.isDate($0.date, inSameDayAs: datePicker.date)
         }
     }
@@ -345,20 +294,20 @@ extension TrackersViewController {
             return
         }
         let trackerRecord = TrackerRecord(id: id, date: selectedDate)
-        trackerRecordStore.save(trackerRecord)
+        store.save(record: trackerRecord)
         
     }
     
     private func removeCompletedTracker(_ tracker: Tracker) {
         let id = tracker.id
         let selectedDate = datePicker.date
-        let trackerRecord = completedTrackers.first {
+        let record = trackerRecords.first {
             $0.id == id && calendar.isDate($0.date, inSameDayAs: selectedDate)
         }
-        guard let trackerRecord else {
+        guard let record else {
             return
         }
-        trackerRecordStore.delete(trackerRecord)
+        store.delete(record: record)
     }
     
     private func menuActions(for indexPath: IndexPath) -> [UIAction] {
@@ -367,12 +316,12 @@ extension TrackersViewController {
         case true:
             UIAction(title: L10n.unpin) { [weak self] _ in
                 guard let self else { return }
-                pin(tracker: tracker, false)
+                store.pin(tracker: tracker, false)
             }
         case false:
             UIAction(title: L10n.pin) { [weak self] _ in
                 guard let self else { return }
-                pin(tracker: tracker, true)
+                store.pin(tracker: tracker, true)
             }
         }
         let editAction = UIAction(title: L10n.edit) { [weak self] _ in
@@ -393,7 +342,7 @@ extension TrackersViewController {
                                    preferredStyle: .actionSheet)
         let deleteAction = UIAlertAction(title: L10n.delete, style: .destructive) { [weak self] _ in
             guard let self else { return }
-            delete(tracker: tracker)
+            store.delete(tracker: tracker)
         }
         let cancelAction = UIAlertAction(title: L10n.cancel, style: .cancel, handler: nil)
         
@@ -405,12 +354,12 @@ extension TrackersViewController {
     
     func performEditAction(for tracker: Tracker) {
         analytics.click(screen: .main, item: .edit)
-        let category = categories.first {
+        let category = trackerCategories.first {
             $0.trackers.contains {
                 $0.id == tracker.id
             }
         }
-        let completedDays = completedTrackers.filter {
+        let completedDays = trackerRecords.filter {
             $0.id == tracker.id
         }.count
         
@@ -426,7 +375,7 @@ extension TrackersViewController {
             guard let self else {
                 return
             }
-            update(tracker: $0, category: $1)
+            store.update(tracker: $0, category: $1)
             dismiss(animated: true, completion: nil)
         }
         present(vc, animated: true)

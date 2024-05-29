@@ -40,6 +40,9 @@ extension CategoryViewController {
             }
             categoryViewModel.addCategory(header: category.header)
             categoryViewModel.selectCategory(header: category.header)
+            if let selectedCategory {
+                onDoneCallback?(selectedCategory)
+            }
             dismiss(animated: true)
         }
         present(vc, animated: true, completion: nil)

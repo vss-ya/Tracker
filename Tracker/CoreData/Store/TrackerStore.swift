@@ -29,19 +29,8 @@ final class TrackerStore: NSObject {
         try? controller.performFetch()
         return controller
     }()
-    private var fetchedObjects: [TrackerCoreData] { fetchedResultsController.fetchedObjects ?? [] }
-    
-    var trackers: [Tracker] { fetchTrackers() }
+    var fetchedObjects: [TrackerCoreData] { fetchedResultsController.fetchedObjects ?? [] }
     weak var delegate: TrackerStoreDelegate?
-    
-    convenience override init() {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            self.init()
-            return
-        }
-        let context = appDelegate.persistentContainer.viewContext
-        self.init(context: context)
-    }
     
     init(context: NSManagedObjectContext) {
         self.context = context
