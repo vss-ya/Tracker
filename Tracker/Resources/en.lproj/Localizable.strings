@@ -1,0 +1,52 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by vs on 28.05.2024.
+  
+*/
+
+"OnboardingPage1" = "Only track\nwhat you want";
+"OnboardingPage2" = "Even if it's not liters\nof water and yoga";
+"Category" = "Category";
+"Schedule" = "Schedule";
+"OnboardingFinishButtonTitle" = "This is technology!";
+"CreateTracker" = "Creating a tracker";
+"Habit" = "Habit";
+"IrregularEvent" = "Irregular event";
+"EveryDay" = "Every day";
+"NewHabit" = "New Habit";
+"NewIrregularEvent" = "New Irregular Event";
+"EnterTrackerName" = "Enter tracker name";
+"Cancel" = "Cancel";
+"Create" = "Create";
+"Trackers" = "Trackers";
+"Search" = "Search";
+"WhatToTrackQuestion" = "What will we track?";
+"NothingFound" = "Nothing found";
+"Done" = "Done";
+"CategoryEmptyText" = "Habits and events can\nbe combined by meaning";
+"AddCategory" = "Add category";
+"NewCategory" = "New Category";
+"EnterCategoryName" = "Enter the category name";
+"Trackers" = "Trackers";
+"Stats" = "Statistics";
+"Unpin" = "Unpin";
+"Pin" = "Pin";
+"Edit" = "Edit";
+"Delete" = "Delete";
+"Pinned" = "Pinned";
+"DeleteTrackerQuestion" = "Are you sure you want to delete the tracker?";
+"EditHabit" = "Edit Habit";
+"Save" = "Save";
+"AllTrackers" = "All trackers";
+"TodayTrackers" = "Trackers for today";
+"CompletedTrackers" = "Completed";
+"NotCompletedTrackers" = "Not completed";
+"Filters" = "Filters";
+"Statistic" = "Statistics";
+"EmptyStatText" = "There is nothing to analyze yet";
+"StatBestPeriod" = "Best period";
+"StatIdealDays" = "Ideal days";
+"StatCompletedTrackers" = "Trackers completed";
+"StatAverageValue" = "Average value";

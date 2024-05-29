@@ -94,12 +94,12 @@ private extension OnboardingViewController {
     func setupPages() {
         let page1 = createPageViewController(
             imageName: "OnboardingPage1",
-            labelText: "Отслеживайте только\nто, что хотите"
+            labelText: "OnboardingPage1".localized()
         )
         
         let page2 = createPageViewController(
             imageName: "OnboardingPage2",
-            labelText: "Даже если это\nне литры воды и йога"
+            labelText: "OnboardingPage2".localized()
         )
         
         pages.append(page1)
@@ -122,7 +122,7 @@ private extension OnboardingViewController {
         label.text = labelText
         label.textAlignment = .center
         label.numberOfLines = 2
-        label.textColor = .ypBlack
+        label.textColor = .ypAnyBlack
         label.font = UIFont.systemFont(ofSize: 30, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(label)

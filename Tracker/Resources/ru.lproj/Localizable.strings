@@ -6,6 +6,8 @@
   
 */
 
+"OnboardingPage1" = "Отслеживайте только\nто, что хотите";
+"OnboardingPage2" = "Даже если это\nне литры воды и йога";
 "Category" = "Категория";
 "Schedule" = "Расписание";
 "OnboardingFinishButtonTitle" = "Вот это технологии!";
