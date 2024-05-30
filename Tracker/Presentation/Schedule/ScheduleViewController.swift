@@ -81,7 +81,7 @@ extension ScheduleViewController {
     
     private func configure(_ cell: ScheduleTableViewCell, at indexPath: IndexPath) {
         let weekDay = weekDays[indexPath.row]
-        let title = "\(weekDay.name)"
+        let title = "\(weekDay.name.capitalized)"
         let isOn = selectedWeekDays[indexPath.row]
         
         cell.selectionStyle = .none
@@ -103,7 +103,7 @@ extension ScheduleViewController {
     private func createHeaderLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Расписание"
+        label.text = L10n.schedule
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .ypBlack
         return label
@@ -128,7 +128,7 @@ extension ScheduleViewController {
         btn.backgroundColor = .ypBlack
         btn.layer.cornerRadius = 16
         btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        btn.setTitle("Готово", for: .normal)
+        btn.setTitle(L10n.done, for: .normal)
         btn.addTarget(self, action: #selector(doneAction), for: .touchUpInside)
         return btn
     }

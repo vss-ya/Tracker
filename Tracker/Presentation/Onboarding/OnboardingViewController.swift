@@ -24,7 +24,7 @@ final class OnboardingViewController: UIPageViewController {
         button.layer.cornerRadius = 16
         button.setTitleColor(.ypWhite, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        button.setTitle("Вот это технологии!", for: .normal)
+        button.setTitle(L10n.onboardingFinishButtonTitle, for: .normal)
         button.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         return button
     }()
@@ -93,13 +93,13 @@ private extension OnboardingViewController {
     
     func setupPages() {
         let page1 = createPageViewController(
-            imageName: "OnboardingPage1",
-            labelText: "Отслеживайте только\nто, что хотите"
+            image: .onboardingPage1,
+            labelText: L10n.onboardingPage1Text
         )
         
         let page2 = createPageViewController(
-            imageName: "OnboardingPage2",
-            labelText: "Даже если это\nне литры воды и йога"
+            image: .onboardingPage2,
+            labelText: L10n.onboardingPage2Text
         )
         
         pages.append(page1)
@@ -110,10 +110,10 @@ private extension OnboardingViewController {
         setViewControllers([page1], direction: .forward, animated: true, completion: nil)
     }
     
-    func createPageViewController(imageName: String, labelText: String) -> UIViewController {
+    func createPageViewController(image: UIImage, labelText: String) -> UIViewController {
         let vc = UIViewController()
         
-        let imageView = UIImageView(image: UIImage(named: imageName))
+        let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(imageView)
@@ -122,7 +122,7 @@ private extension OnboardingViewController {
         label.text = labelText
         label.textAlignment = .center
         label.numberOfLines = 2
-        label.textColor = .ypBlack
+        label.textColor = .ypAnyBlack
         label.font = UIFont.systemFont(ofSize: 30, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         vc.view.addSubview(label)

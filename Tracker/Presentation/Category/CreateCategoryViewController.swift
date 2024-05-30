@@ -113,7 +113,7 @@ extension CreateCategoryViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .ypBlack
-        label.text = "Новая категория"
+        label.text = L10n.newCategory
         return label
     }
     
@@ -131,14 +131,14 @@ extension CreateCategoryViewController {
         field.rightViewMode = .whileEditing
         field.textColor = .ypBlack
         field.font = .systemFont(ofSize: 17, weight: .regular)
-        field.placeholder = "Введите название категории"
+        field.placeholder = L10n.enterCategoryName
         field.delegate = self
         return field
     }
     
     private func createNameClearButton() -> UIButton {
         let btn = UIButton(type: .custom)
-        btn.setImage(UIImage(named: "Clean"), for: .normal)
+        btn.setImage(.clean, for: .normal)
         btn.frame = CGRect(x: 0, y: 0, width: 17, height: 17)
         btn.contentMode = .scaleAspectFit
         btn.isHidden = true
@@ -154,7 +154,7 @@ extension CreateCategoryViewController {
         btn.layer.cornerRadius = 16
         btn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
         btn.isEnabled = false
-        btn.setTitle("Готово", for: .normal)
+        btn.setTitle(L10n.done, for: .normal)
         btn.addTarget(self, action: #selector(createAction), for: .touchUpInside)
         btn.isEnabled = false
         return btn

@@ -29,7 +29,7 @@ final class TrackerCategoryStore: NSObject {
         try? controller.performFetch()
         return controller
     }()
-    private let trackerStore = TrackerStore()
+    private var fetchedObjects: [TrackerCategoryCoreData] { fetchedResultsController.fetchedObjects ?? [] }
     
     var trackerCategories: [TrackerCategory] { fetchTrackerCategories() }
     weak var delegate: TrackerCategoryStoreDelegate?
@@ -57,7 +57,7 @@ final class TrackerCategoryStore: NSObject {
     }
     
     func addToCategory(withHeader header: String, tracker: Tracker) {
-        guard let coreData = fetch(with: header) else {
+        guard let coreData = fetchedObjects.first(where: { $0.header == header }) else {
             assertionFailure("Invalid Configuration")
             return
         }
@@ -69,6 +69,20 @@ final class TrackerCategoryStore: NSObject {
         try? context.save()
     }
     
+    func delete(tracker: UUID) {
+        let coreData = fetchedObjects.first(where: {
+            ($0.trackers ?? []).contains(where: { $0 == tracker })
+        })
+        guard let coreData else {
+            assertionFailure("Invalid Configuration")
+            return
+        }
+        coreData.trackers = coreData.trackers?.filter({
+            $0 != tracker
+        })
+        try? context.save()
+    }
+    
     private func trackerCategory(from coreData: TrackerCategoryCoreData) -> TrackerCategory? {
         guard
             let header = coreData.header,
@@ -76,6 +90,7 @@ final class TrackerCategoryStore: NSObject {
         else {
             return nil
         }
+        let trackerStore = TrackerStore()
         let result = TrackerCategory(
             header: header,
             trackers: trackerStore.trackers.filter { tracker in
@@ -87,18 +102,8 @@ final class TrackerCategoryStore: NSObject {
         return result
     }
     
-    private func fetch(with header: String) -> TrackerCategoryCoreData? {
-        let fetchRequest = TrackerCategoryCoreData.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "header == %@", header as CVarArg)
-        let result = try? context.fetch(fetchRequest)
-        return result?.first
-    }
-    
     private func fetchTrackerCategories() -> [TrackerCategory] {
-        guard let objects = fetchedResultsController.fetchedObjects else {
-            return []
-        }
-        let result = objects.compactMap({ trackerCategory(from: $0) })
+        let result = fetchedObjects.compactMap({ trackerCategory(from: $0) })
         return result
     }
     

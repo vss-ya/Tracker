@@ -18,7 +18,7 @@ final class TrackerStore: NSObject {
     private lazy var fetchedResultsController = {
         let fetchRequest = TrackerCoreData.fetchRequest()
         fetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \TrackerCoreData.id, ascending: true)
+            NSSortDescriptor(keyPath: \TrackerCoreData.title, ascending: true)
         ]
         let controller = NSFetchedResultsController(
             fetchRequest: fetchRequest,
@@ -29,6 +29,7 @@ final class TrackerStore: NSObject {
         try? controller.performFetch()
         return controller
     }()
+    private var fetchedObjects: [TrackerCoreData] { fetchedResultsController.fetchedObjects ?? [] }
     
     var trackers: [Tracker] { fetchTrackers() }
     weak var delegate: TrackerStoreDelegate?
@@ -49,15 +50,29 @@ final class TrackerStore: NSObject {
     }
     
     func save(_ obj: Tracker) {
-        let coreData = TrackerCoreData(context: context)
-        coreData.id = obj.id
-        coreData.title = obj.title
-        coreData.color = obj.color.toHexString()
-        coreData.emoji = obj.emoji
-        coreData.schedule = obj.schedule?.map {
-            $0.rawValue
-        }
+        let _ = trackerCoreData(from: obj)
         try? context.save()
+    }
+    
+    func pin(id: UUID, _ pinned: Bool) {
+        guard let coreData = fetchedObjects.first(where: { $0.id == id }) else {
+            return
+        }
+        coreData.pinned = pinned
+        try? context.save()
+    }
+    
+    func delete(id: UUID) {
+        guard let coreData = fetchedObjects.first(where: { $0.id == id }) else {
+            return
+        }
+        context.delete(coreData)
+        try? context.save()
+    }
+    
+    private func fetchTrackers() -> [Tracker] {
+        let result = fetchedObjects.compactMap({ tracker(from: $0) })
+        return result
     }
     
     private func tracker(from coreData: TrackerCoreData) -> Tracker? {
@@ -69,19 +84,26 @@ final class TrackerStore: NSObject {
         else {
             return nil
         }
+        let pinned = coreData.pinned
         return Tracker(id: id,
                        title: title,
                        color: UIColor(hex: color),
                        emoji: emoji,
-                       schedule: schedule.compactMap({ WeekDay(rawValue: $0)}))
+                       schedule: schedule.compactMap({ WeekDay(rawValue: $0)}),
+                       pinned: pinned)
     }
     
-    private func fetchTrackers() -> [Tracker] {
-        guard let objects = fetchedResultsController.fetchedObjects else {
-            return []
+    private func trackerCoreData(from obj: Tracker) -> TrackerCoreData {
+        let coreData = TrackerCoreData(context: context)
+        coreData.id = obj.id
+        coreData.title = obj.title
+        coreData.color = obj.color.toHexString()
+        coreData.emoji = obj.emoji
+        coreData.schedule = obj.schedule?.map {
+            $0.rawValue
         }
-        let result = objects.compactMap({ tracker(from: $0) })
-        return result
+        coreData.pinned = obj.pinned
+        return coreData
     }
     
 }

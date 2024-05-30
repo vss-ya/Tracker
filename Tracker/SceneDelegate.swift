@@ -15,7 +15,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = (scene as? UIWindowScene) else { return }
+        
         window = UIWindow(windowScene: scene)
+        window?.makeKeyAndVisible()
+        
+        setupRootViewController()
+    }
+    
+    private func setupRootViewController() {
         if userSettings.skipOnboarding {
             window?.rootViewController = TabBarController()
         } else {
@@ -25,7 +32,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 window?.rootViewController = TabBarController()
             }
         }
-        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {}

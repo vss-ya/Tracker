@@ -12,9 +12,9 @@ enum TrackerOption {
     var title: String {
         switch self {
         case .category:
-            "Категория"
+            L10n.category
         case .schedule:
-            "Расписание"
+            L10n.schedule
         }
     }
     

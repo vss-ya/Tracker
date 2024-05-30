@@ -22,7 +22,7 @@ final class CategoryTableViewCell: UITableViewCell {
     private let checkImage: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.image = UIImage(named: "CategoryCheck")
+        image.image = .categoryCheck
         image.tintColor = .ypGray
         return image
     }()

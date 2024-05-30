@@ -14,15 +14,15 @@ final class TabBarController: UITabBarController {
                 
         let trackersVc = UINavigationController(rootViewController: TrackersViewController())
         trackersVc.tabBarItem = UITabBarItem(
-            title: "Трекеры",
-            image: UIImage(named: "Trackers"),
+            title: L10n.trackers,
+            image: .trackers,
             selectedImage: nil
         )
         
         let statisticVc = StatisticViewController()
         statisticVc.tabBarItem = UITabBarItem(
-            title: "Статистика",
-            image: UIImage(named: "Stats"),
+            title: L10n.statistic,
+            image: .stats,
             selectedImage: nil
         )
         

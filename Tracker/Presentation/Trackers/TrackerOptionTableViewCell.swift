@@ -39,7 +39,7 @@ final class TrackerOptionTableViewCell: UITableViewCell {
     private let chevronImage: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.image = UIImage(named: "Chevron")
+        image.image = .chevron
         image.tintColor = .ypGray
         return image
     }()

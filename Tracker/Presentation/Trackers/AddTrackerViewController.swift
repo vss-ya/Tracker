@@ -22,7 +22,7 @@ final class AddTrackerViewController: UIViewController {
     }
     
     private func setup() {
-        view.backgroundColor = .white
+        view.backgroundColor = .ypWhite
         
         view.addSubview(headerLabel)
         view.addSubview(habitButton)
@@ -51,16 +51,16 @@ final class AddTrackerViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textColor = .ypBlack
-        label.text = "Создание трекера"
+        label.text = L10n.createTracker
         return label
     }
     
     private func createHabitButton() -> UIButton {
-        return createButton(title: "Привычка", action: #selector(habitAction))
+        return createButton(title: L10n.habit, action: #selector(habitAction))
     }
     
     private func createIrregularEventButton() -> UIButton {
-        return createButton(title: "Нерегулярное событие", action: #selector(irregularEventAction))
+        return createButton(title: L10n.irregularEvent, action: #selector(irregularEventAction))
     }
     
     private func createButton(title: String, action: Selector) -> UIButton {
