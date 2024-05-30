@@ -97,7 +97,6 @@ extension TrackersViewController {
             case .todayTrackers:
                 selectedFilter = .allTrackers
                 datePicker.date = Date()
-                return
             default:
                 break
             }
